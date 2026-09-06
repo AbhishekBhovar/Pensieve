@@ -394,23 +394,86 @@ function need(){
 }
 
 function support(){
-  let title,body;
   if(state.need==="understand"){
-    title="Separate the result from the lesson.";
-    body="The useful question is what actually went wrong — preparation, strategy, timing, support, circumstances — without turning the whole thing into a judgement about yourself.";
-  } else if(state.need==="confidence"){
-    title="Your confidence took a hit.";
-    body="You don’t have to pretend this didn’t hurt. Confidence can also come from knowing that one result doesn’t get the final word.";
-  } else {
-    title="Make the future smaller.";
-    body="You don’t need to solve the degree or the next year today. You only need to decide the next useful move.";
+    render(`
+      <div class="space-lg">
+        <div class="stack">
+          <div class="kicker">Let’s understand it</div>
+          <h2>What do you think actually went wrong?</h2>
+          <p class="sub">Focus on the attempt, not on judging yourself.</p>
+        </div>
+        <textarea id="branch" placeholder="What I think went wrong is...">I don’t think I prepared in the right way. I studied, but I avoided the parts I found hardest.</textarea>
+        <button id="next" class="primary">Look at this with me</button>
+      </div>`);
+    document.getElementById('next').onclick=understandFollowup;
+    return;
+  }
+  if(state.need==="confidence"){
+    render(`
+      <div class="space-lg">
+        <div class="stack">
+          <div class="kicker">Your confidence took a hit</div>
+          <h2>What are you doubting about yourself now?</h2>
+          <p class="sub">What changed in the way you see yourself after this happened?</p>
+        </div>
+        <textarea id="branch" placeholder="What I’m doubting now is...">I’m starting to wonder if I’m actually smart enough to finish this degree.</textarea>
+        <button id="next" class="primary">Help me look at this</button>
+      </div>`);
+    document.getElementById('next').onclick=confidenceFollowup;
+    return;
   }
   render(`
     <div class="space-lg">
       <div class="stack">
-        <div class="kicker">For right now</div>
-        <h2>${title}</h2>
-        <p>${body}</p>
+        <div class="kicker">What comes next?</div>
+        <h2>What options are you considering?</h2>
+        <p class="sub">And what is making the next move hard to choose?</p>
+      </div>
+      <textarea id="branch" placeholder="The options I’m thinking about are...">I could review the feedback, ask for help, or change how I prepare — but I feel embarrassed and I don’t know where to start.</textarea>
+      <button id="next" class="primary">Help me narrow it down</button>
+    </div>`);
+  document.getElementById('next').onclick=nextFollowup;
+}
+
+function understandFollowup(){
+  render(`
+    <div class="space-lg">
+      <div class="stack">
+        <div class="kicker">That gives us something useful</div>
+        <h2>The result and the cause are not the same thing.</h2>
+        <p>You’re not saying you were incapable. You’re identifying a part of the approach that may not have worked.</p>
+        <p class="sub">That means there is something you can learn from — not just something to feel bad about.</p>
+      </div>
+      <button id="next" class="primary">Turn this into a 1% step</button>
+    </div>`);
+  document.getElementById('next').onclick=onePercent;
+}
+
+function confidenceFollowup(){
+  render(`
+    <div class="space-lg">
+      <div class="stack">
+        <div class="kicker">That’s the part worth looking at</div>
+        <h2>The exam has started to feel like evidence about who you are.</h2>
+        <p>But it can tell you how you performed on one attempt. It cannot measure the limits of what you’re capable of learning.</p>
+      </div>
+      <div class="stack">
+        <h2>What would you need to see from yourself to start rebuilding some of that confidence?</h2>
+        <textarea id="confidenceBuild" placeholder="I think I’d need to...">I think I need to prove to myself that I can understand the material instead of avoiding it because I’m embarrassed.</textarea>
+      </div>
+      <button id="next" class="primary">Make that 1% smaller</button>
+    </div>`);
+  document.getElementById('next').onclick=onePercent;
+}
+
+function nextFollowup(){
+  render(`
+    <div class="space-lg">
+      <div class="stack">
+        <div class="kicker">Let’s make it clearer</div>
+        <h2>You don’t have to choose the whole path today.</h2>
+        <p>The useful question is which option gives you the clearest next piece of information or momentum.</p>
+        <p class="sub">We can turn that into one small move instead of a major decision.</p>
       </div>
       <button id="next" class="primary">Find my 1% step</button>
     </div>`);
@@ -447,17 +510,18 @@ function takeaway(){
       <div class="stack">
         <div class="kicker">Before we leave this here</div>
         <h2>What do you want to take with you?</h2>
-        <p class="sub">Here’s what I think might be worth remembering.</p>
+        <p class="sub">I’ve suggested something below. Change any part of it until it feels like yours.</p>
       </div>
       <div class="softnote">
         <strong>What I’m taking with me</strong>
-        <p>${state.takeaway}</p>
-        <button id="editTake" class="editline">Edit</button>
+        <textarea id="takeInline" style="min-height:145px;margin-top:10px">${state.takeaway}</textarea>
       </div>
       <button id="next" class="primary">Keep going</button>
     </div>`);
-  document.getElementById('editTake').onclick=editTakeaway;
-  document.getElementById('next').onclick=resolution;
+  document.getElementById('next').onclick=()=>{
+    state.takeaway=value('takeInline')||state.takeaway;
+    resolution();
+  };
 }
 
 function editTakeaway(){
@@ -482,26 +546,26 @@ function resolution(){
       <div class="stack">
         <div class="kicker">For today</div>
         <h2>You don’t have to solve the whole future tonight.</h2>
-        <p class="sub">You’ve understood the fear more clearly and chosen one small way forward.</p>
+        <p class="sub">Before you leave this here, you can still change either thought.</p>
       </div>
 
       <div class="softnote">
         <strong>What I’m taking with me</strong>
-        <p>${state.takeaway}</p>
-        <button id="editTake" class="editline">Edit</button>
+        <textarea id="finalTake" style="min-height:145px;margin-top:10px">${state.takeaway}</textarea>
       </div>
 
       <div class="softnote">
         <strong>My 1% step today</strong>
-        <p>${state.step}</p>
-        <button id="editStep" class="editline">Edit</button>
+        <textarea id="finalStep" style="min-height:105px;margin-top:10px">${state.step}</textarea>
       </div>
 
       <button id="next" class="primary">Leave this in the Pensieve</button>
     </div>`);
-  document.getElementById('editTake').onclick=editTakeawayFinal;
-  document.getElementById('editStep').onclick=editStepFinal;
-  document.getElementById('next').onclick=memory;
+  document.getElementById('next').onclick=()=>{
+    state.takeaway=value('finalTake')||state.takeaway;
+    state.step=value('finalStep')||state.step;
+    memory();
+  };
 }
 
 function editTakeawayFinal(){

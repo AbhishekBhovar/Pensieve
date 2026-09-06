@@ -1,9 +1,12 @@
-Pensieve 1.4
+Pensieve 1.6
 
-- Approved edge-to-edge logo locked and added as the iPhone home-screen icon.
-- Loading reduced to 4 seconds.
-- CSS-only loading progress: 0%, 25%, 50%, 75%, 100%.
-- 14 brighter magical sparkles around the Pensieve.
-- CSS fail-safe means the loading screen cannot trap the app even if JavaScript stalls.
-- JavaScript removes the loading overlay after 4.4s as a second safeguard.
-- Removed custom touch interception; buttons use native Safari clicks.
+Critical loading-screen repair:
+- Fixed malformed CSS from previous loading patches.
+- Restored a valid loadingFailsafe keyframe.
+- Loading now exits at 4 seconds using CSS even if JavaScript fails.
+- Reduced Motion can no longer disable the loading-screen exit.
+- JavaScript independently removes the loading overlay at 4.05s, 5s, and 7s as watchdogs.
+- The overlay becomes display:none and pointer-events:none before removal.
+- Clean progress bar retained; no numeric percentages.
+- Sparkles retained.
+- Locked Pensieve artwork/logo unchanged.

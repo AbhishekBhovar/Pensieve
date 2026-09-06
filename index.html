@@ -6,7 +6,7 @@
 <meta name="theme-color" content="#071018">
 <link rel="apple-touch-icon" href="assets/pensieve-logo-LOCKED.png">
 <title>Pensieve</title>
-<meta name="pensieve-build" content="1.7">
+<meta name="pensieve-build" content="1.9">
 <style>
 :root{
   --bg:#061019;--bg2:#0b1822;--panel:#102430;--panel2:#142d3a;
@@ -20,7 +20,17 @@ a{color:inherit;text-decoration:none;-webkit-tap-highlight-color:transparent}
 .app{position:relative;width:100%;height:100dvh;max-width:430px;margin:auto;overflow:hidden;background:
  radial-gradient(circle at 50% -8%,rgba(111,168,196,.12),transparent 29%),
  linear-gradient(180deg,#0b1822,#071018 58%,#050c12)}
-.screen{position:absolute;inset:0;z-index:0;opacity:0;visibility:hidden;pointer-events:none;background:transparent}
+.screen{
+  position:absolute;
+  inset:0;
+  z-index:0;
+  opacity:0;
+  visibility:hidden;
+  pointer-events:none;
+  background:
+    radial-gradient(circle at 50% -8%,rgba(111,168,196,.12),transparent 29%),
+    linear-gradient(180deg,#0b1822,#071018 58%,#050c12)
+}
 #home{z-index:1;opacity:1;visibility:visible;pointer-events:auto}
 .screen:target{z-index:5;opacity:1;visibility:visible;pointer-events:auto}
 .scroll{height:100%;overflow:auto;-webkit-overflow-scrolling:touch;padding:calc(14px + var(--safe-top)) 18px calc(92px + var(--safe-bottom));scrollbar-width:none}
@@ -77,6 +87,44 @@ textarea::placeholder{color:#718896}
 @keyframes fill{from{width:0}to{width:100%}}@keyframes loaderGone{to{opacity:0;visibility:hidden;pointer-events:none}}@keyframes twinkle{0%,100%{opacity:.12}45%{opacity:1}65%{opacity:.45}}
 @media(prefers-reduced-motion:reduce){.spark{animation:none;opacity:.65}.loader i{animation:fill 4s linear forwards!important}.loading{animation:loaderGone .01s linear 4s forwards!important}}
 @media(max-height:760px){.hero{height:220px}.scroll{padding-top:calc(10px + var(--safe-top))}h1{font-size:27px}}
+
+/* Focus mode: conversation screens are full-screen and never show Home underneath. */
+.app:has(.conversation:target) .nav{
+  display:none;
+}
+.app:has(.conversation:target) .conversation:target .scroll{
+  padding-bottom:calc(26px + var(--safe-bottom));
+}
+
+/* Free-writing screens use a calmer vertical rhythm. */
+#free-start .scroll,
+#failed-start .scroll,
+#overwhelmed-start .scroll,
+#grieving-start .scroll,
+#afraid-start .scroll,
+#angry-start .scroll,
+#motivation-start .scroll{
+  padding-top:calc(18px + var(--safe-top));
+}
+#free-start textarea{
+  min-height:210px;
+}
+
+
+/* Pensieve 1.9 — Home is choice-first only */
+#home .hero{
+  height:245px;
+}
+#home .moodgrid{
+  margin-top:2px;
+}
+#home .choice.mood{
+  min-height:64px;
+  justify-content:flex-start;
+  padding-left:18px;
+  font-size:16px;
+}
+
 </style>
 </head>
 <body>
@@ -104,43 +152,45 @@ textarea::placeholder{color:#718896}
 <section id="home" class="screen">
   <div class="scroll">
     <div class="stack-lg">
-      <div class="hero"><div class="hero-copy"><h1>What’s on your mind?</h1><p class="sub">A quiet place to understand what you’re carrying.</p></div></div>
-      <a class="primary" href="#free-start">Start a reflection</a>
-      <div>
-        <p class="sub" style="margin-bottom:10px">Or start with what feels closest.</p>
-        <div class="moodgrid">
-          <a class="choice mood" href="#overwhelmed-start">I’m overwhelmed</a>
-          <a class="choice mood" href="#grieving-start">I’m grieving</a>
-          <a class="choice mood" href="#afraid-start">I’m afraid</a>
-          <a class="choice mood" href="#failed-start">I’ve failed</a>
-          <a class="choice mood" href="#angry-start">I’m angry</a>
-          <a class="choice mood" href="#motivation-start">I need motivation</a>
+      <div class="hero">
+        <div class="hero-copy">
+          <h1>How are you feeling?</h1>
+          <p class="sub">Start with what feels closest right now.</p>
         </div>
+      </div>
+
+      <div class="moodgrid">
+        <a class="choice mood" href="#overwhelmed-start">I’m overwhelmed</a>
+        <a class="choice mood" href="#grieving-start">I’m grieving</a>
+        <a class="choice mood" href="#afraid-start">I’m afraid</a>
+        <a class="choice mood" href="#failed-start">I’ve failed</a>
+        <a class="choice mood" href="#angry-start">I’m angry</a>
+        <a class="choice mood" href="#motivation-start">I need motivation</a>
       </div>
     </div>
   </div>
 </section>
 
-<section id="failed-start" class="screen"><div class="scroll">
+<section id="failed-start" class="screen conversation"><div class="scroll">
   <div class="topbar"><a class="back" href="#home">‹</a><div class="brand">PENSIEVE</div><span></span></div>
   <div class="stack-lg"><div class="stack"><div class="eyebrow">I’m listening</div><h1>Tell me what happened.</h1><p class="sub">Give me the short version — just enough for me to understand.</p></div>
   <textarea placeholder="Write the short version…"></textarea><a class="primary" href="#failed-summary">Continue</a></div>
 </div></section>
 
-<section id="failed-summary" class="screen"><div class="scroll">
+<section id="failed-summary" class="screen conversation"><div class="scroll">
   <div class="topbar"><a class="back" href="#failed-start">‹</a><div class="brand">PENSIEVE</div><span></span></div>
   <div class="stack-lg"><div class="stack"><div class="eyebrow">I understand</div><div class="reflection">You’ve tried again, it hasn’t gone the way you hoped, and now you’re worried about what this could mean for finishing your degree.</div></div>
   <div class="stack"><h2>Want to go a little deeper?</h2><p class="sub">Tell me what feels most important — what hurt, what you’re worried this means, or anything else sitting with you.</p></div>
   <a class="primary" href="#failed-deep">Yes, let’s go deeper</a><a class="secondary" href="#failed-perspective">Not right now</a></div>
 </div></section>
 
-<section id="failed-deep" class="screen"><div class="scroll">
+<section id="failed-deep" class="screen conversation"><div class="scroll">
  <div class="topbar"><a class="back" href="#failed-summary">‹</a><div class="brand">PENSIEVE</div><span></span></div>
  <div class="stack-lg"><div class="stack"><div class="eyebrow">Go deeper</div><h2>What feels hardest about this?</h2><p class="sub">You don’t need to organise it neatly. Just write what feels true.</p></div>
  <textarea placeholder="What feels true right now?"></textarea><a class="primary" href="#failed-hearing">Go deeper</a></div>
 </div></section>
 
-<section id="failed-hearing" class="screen"><div class="scroll">
+<section id="failed-hearing" class="screen conversation"><div class="scroll">
  <div class="topbar"><a class="back" href="#failed-deep">‹</a><div class="brand">PENSIEVE</div><span></span></div>
  <div class="stack-lg"><div class="stack"><div class="eyebrow">What I’m hearing</div><h2>This seems bigger than the exam.</h2></div>
  <p class="sub">You’re disappointed by the result, but what seems to hurt most is what you’re starting to make it mean about you — that maybe you’re not capable, or that you’re falling behind.</p>
@@ -148,7 +198,7 @@ textarea::placeholder{color:#718896}
  <a class="primary" href="#failed-perspective">See another perspective →</a><a class="secondary" href="#failed-deep">Not quite</a></div>
 </div></section>
 
-<section id="failed-perspective" class="screen"><div class="scroll">
+<section id="failed-perspective" class="screen conversation"><div class="scroll">
  <div class="topbar"><a class="back" href="#failed-hearing">‹</a><div class="brand">PENSIEVE</div><span></span></div>
  <div class="stack-lg"><div class="stack"><div class="eyebrow">Another perspective</div><p class="sub" style="color:#e9f0f3;font-size:16px">Failing at something can tell you an attempt didn’t work. It can’t, by itself, tell you what you’re capable of.</p></div>
  <div class="quote">“It ain’t about how hard you hit. It’s about how hard you can get hit and keep moving forward.”<small>Rocky Balboa</small></div>
@@ -160,7 +210,7 @@ textarea::placeholder{color:#718896}
  </div><a class="primary" href="#failed-needs">Continue →</a></div>
 </div></section>
 
-<section id="failed-needs" class="screen"><div class="scroll">
+<section id="failed-needs" class="screen conversation"><div class="scroll">
  <div class="topbar"><a class="back" href="#failed-perspective">‹</a><div class="brand">PENSIEVE</div><span></span></div>
  <div class="stack-lg"><div class="stack"><div class="eyebrow">Bring it back to you</div><h2>What do you need most from this moment?</h2></div>
  <a class="choice" href="#failed-understand">Understand why this attempt went wrong</a>
@@ -168,7 +218,7 @@ textarea::placeholder{color:#718896}
  <a class="choice" href="#failed-next">Think about what I want to do next</a></div>
 </div></section>
 
-<section id="failed-understand" class="screen"><div class="scroll">
+<section id="failed-understand" class="screen conversation"><div class="scroll">
  <div class="topbar"><a class="back" href="#failed-needs">‹</a><div class="brand">PENSIEVE</div><span></span></div>
  <div class="stack-lg"><div class="stack"><div class="eyebrow">Look at the attempt</div><h2>What do you think actually went wrong?</h2><p class="sub">Focus on the attempt, not on judging yourself.</p></div>
  <textarea placeholder="What didn’t work?"></textarea>
@@ -176,7 +226,7 @@ textarea::placeholder{color:#718896}
  <a class="primary" href="#failed-step">Turn this into a 1% step</a></div>
 </div></section>
 
-<section id="failed-confidence" class="screen"><div class="scroll">
+<section id="failed-confidence" class="screen conversation"><div class="scroll">
  <div class="topbar"><a class="back" href="#failed-needs">‹</a><div class="brand">PENSIEVE</div><span></span></div>
  <div class="stack-lg"><div class="stack"><div class="eyebrow">Confidence</div><h2>What are you doubting about yourself now?</h2><p class="sub">What changed in the way you see yourself after this happened?</p></div>
  <textarea placeholder="What are you starting to believe about yourself?"></textarea>
@@ -186,7 +236,7 @@ textarea::placeholder{color:#718896}
  <a class="primary" href="#failed-step">Make that 1% smaller</a></div>
 </div></section>
 
-<section id="failed-next" class="screen"><div class="scroll">
+<section id="failed-next" class="screen conversation"><div class="scroll">
  <div class="topbar"><a class="back" href="#failed-needs">‹</a><div class="brand">PENSIEVE</div><span></span></div>
  <div class="stack-lg"><div class="stack"><div class="eyebrow">What next</div><h2>What options are you considering?</h2><p class="sub">And what is making the next move hard to choose?</p></div>
  <textarea placeholder="What are the options?"></textarea>
@@ -194,7 +244,7 @@ textarea::placeholder{color:#718896}
  <a class="primary" href="#failed-step">Find my 1% step</a></div>
 </div></section>
 
-<section id="failed-step" class="screen"><div class="scroll">
+<section id="failed-step" class="screen conversation"><div class="scroll">
  <div class="topbar"><a class="back" href="#failed-needs">‹</a><div class="brand">PENSIEVE</div><span></span></div>
  <div class="stack-lg"><div class="stack"><div class="eyebrow">For today</div><h2>What would moving just 1% in the right direction look like today?</h2><p class="sub">One small positive move. Nothing more.</p></div>
  <a class="choice" href="#failed-final">Review my exam feedback and identify one recurring mistake</a>
@@ -204,7 +254,7 @@ textarea::placeholder{color:#718896}
  <a class="primary" href="#failed-final">Continue</a></div>
 </div></section>
 
-<section id="failed-final" class="screen"><div class="scroll">
+<section id="failed-final" class="screen conversation"><div class="scroll">
  <div class="topbar"><a class="back" href="#failed-step">‹</a><div class="brand">PENSIEVE</div><span></span></div>
  <div class="stack-lg"><div class="stack"><div class="eyebrow">For today</div><h2>You don’t have to solve the whole future tonight.</h2><p class="sub">Before you leave this here, you can still change either thought.</p></div>
  <div class="finalbox"><strong>What I’m taking with me</strong><textarea>One failed attempt doesn’t answer what I’m capable of. I need to understand what didn’t work rather than turn the result into a judgement about myself.</textarea></div>
@@ -212,34 +262,31 @@ textarea::placeholder{color:#718896}
  <a class="primary" href="#kept">Leave this in the Pensieve</a></div>
 </div></section>
 
-<section id="kept" class="screen"><div class="scroll">
+<section id="kept" class="screen conversation"><div class="scroll">
  <div class="topbar"><a class="back" href="#home">‹</a><div class="brand">PENSIEVE</div><span></span></div>
  <div class="stack-lg" style="text-align:center;padding-top:18px"><div class="hero" style="height:245px"></div><div class="stack"><div class="eyebrow">Memory kept</div><h1>Thank you for sharing.</h1><p class="sub">You can leave this here for now.</p></div>
  <a class="primary" href="#reflections">View reflections</a><a class="secondary" href="#home">Back to home</a></div>
 </div></section>
 
-<section id="overwhelmed-start" class="screen"><div class="scroll">
+<section id="overwhelmed-start" class="screen conversation"><div class="scroll">
  <div class="topbar"><a class="back" href="#home">‹</a><div class="brand">PENSIEVE</div><span></span></div>
  <div class="stack-lg"><div class="stack"><div class="eyebrow">I’m listening</div><h1>What feels like too much right now?</h1><p class="sub">Give me the short version. What’s piling up?</p></div><textarea placeholder="What’s piling up?"></textarea>
  <div class="card"><h3>There’s a lot competing for your attention.</h3><p class="sub" style="margin-top:8px">Let’s work out what is making the whole pile feel heaviest.</p></div>
  <a class="primary" href="#overwhelmed-deep">Go a little deeper</a></div>
 </div></section>
-<section id="overwhelmed-deep" class="screen"><div class="scroll"><div class="topbar"><a class="back" href="#overwhelmed-start">‹</a><div class="brand">PENSIEVE</div><span></span></div><div class="stack-lg"><h2>What feels most urgent — and what is simply making the most noise?</h2><textarea placeholder="What feels true?"></textarea><div class="reflection">You don’t have to clear the whole pile.</div><p class="sub">What would create a little breathing room today?</p><a class="primary" href="#kept">Leave this in the Pensieve</a></div></div></section>
+<section id="overwhelmed-deep" class="screen conversation"><div class="scroll"><div class="topbar"><a class="back" href="#overwhelmed-start">‹</a><div class="brand">PENSIEVE</div><span></span></div><div class="stack-lg"><h2>What feels most urgent — and what is simply making the most noise?</h2><textarea placeholder="What feels true?"></textarea><div class="reflection">You don’t have to clear the whole pile.</div><p class="sub">What would create a little breathing room today?</p><a class="primary" href="#kept">Leave this in the Pensieve</a></div></div></section>
 
-<section id="grieving-start" class="screen"><div class="scroll"><div class="topbar"><a class="back" href="#home">‹</a><div class="brand">PENSIEVE</div><span></span></div><div class="stack-lg"><div class="stack"><div class="eyebrow">I’m listening</div><h1>What are you carrying today?</h1><p class="sub">Tell me who or what you’re missing, in whatever words come naturally.</p></div><textarea placeholder="Take your time…"></textarea><div class="reflection">There may be nothing to fix here. We can simply stay with what hurts and understand it a little better.</div><a class="primary" href="#grieving-deep">Go a little deeper</a></div></div></section>
-<section id="grieving-deep" class="screen"><div class="scroll"><div class="topbar"><a class="back" href="#grieving-start">‹</a><div class="brand">PENSIEVE</div><span></span></div><div class="stack-lg"><h2>What do you miss most today?</h2><textarea placeholder="Whatever comes to mind…"></textarea><div class="reflection">You don’t have to make this productive.</div><p class="sub">What would feel a little kinder today?</p><a class="primary" href="#kept">Leave this in the Pensieve</a></div></div></section>
+<section id="grieving-start" class="screen conversation"><div class="scroll"><div class="topbar"><a class="back" href="#home">‹</a><div class="brand">PENSIEVE</div><span></span></div><div class="stack-lg"><div class="stack"><div class="eyebrow">I’m listening</div><h1>What are you carrying today?</h1><p class="sub">Tell me who or what you’re missing, in whatever words come naturally.</p></div><textarea placeholder="Take your time…"></textarea><div class="reflection">There may be nothing to fix here. We can simply stay with what hurts and understand it a little better.</div><a class="primary" href="#grieving-deep">Go a little deeper</a></div></div></section>
+<section id="grieving-deep" class="screen conversation"><div class="scroll"><div class="topbar"><a class="back" href="#grieving-start">‹</a><div class="brand">PENSIEVE</div><span></span></div><div class="stack-lg"><h2>What do you miss most today?</h2><textarea placeholder="Whatever comes to mind…"></textarea><div class="reflection">You don’t have to make this productive.</div><p class="sub">What would feel a little kinder today?</p><a class="primary" href="#kept">Leave this in the Pensieve</a></div></div></section>
 
-<section id="afraid-start" class="screen"><div class="scroll"><div class="topbar"><a class="back" href="#home">‹</a><div class="brand">PENSIEVE</div><span></span></div><div class="stack-lg"><div class="stack"><div class="eyebrow">I’m listening</div><h1>What are you afraid might happen?</h1><p class="sub">Give me the short version — just enough for me to understand.</p></div><textarea placeholder="What are you afraid of?"></textarea><div class="reflection">Part of you is already living inside what might happen.</div><a class="primary" href="#afraid-deep">Go a little deeper</a></div></div></section>
-<section id="afraid-deep" class="screen"><div class="scroll"><div class="topbar"><a class="back" href="#afraid-start">‹</a><div class="brand">PENSIEVE</div><span></span></div><div class="stack-lg"><h2>What are you worried this would mean about your life or about you?</h2><textarea placeholder="What does the fear seem to mean?"></textarea><div class="reflection">Fear is asking for certainty you may not be able to have yet.</div><p class="sub">What is actually within your control today?</p><a class="primary" href="#kept">Leave this in the Pensieve</a></div></div></section>
+<section id="afraid-start" class="screen conversation"><div class="scroll"><div class="topbar"><a class="back" href="#home">‹</a><div class="brand">PENSIEVE</div><span></span></div><div class="stack-lg"><div class="stack"><div class="eyebrow">I’m listening</div><h1>What are you afraid might happen?</h1><p class="sub">Give me the short version — just enough for me to understand.</p></div><textarea placeholder="What are you afraid of?"></textarea><div class="reflection">Part of you is already living inside what might happen.</div><a class="primary" href="#afraid-deep">Go a little deeper</a></div></div></section>
+<section id="afraid-deep" class="screen conversation"><div class="scroll"><div class="topbar"><a class="back" href="#afraid-start">‹</a><div class="brand">PENSIEVE</div><span></span></div><div class="stack-lg"><h2>What are you worried this would mean about your life or about you?</h2><textarea placeholder="What does the fear seem to mean?"></textarea><div class="reflection">Fear is asking for certainty you may not be able to have yet.</div><p class="sub">What is actually within your control today?</p><a class="primary" href="#kept">Leave this in the Pensieve</a></div></div></section>
 
-<section id="angry-start" class="screen"><div class="scroll"><div class="topbar"><a class="back" href="#home">‹</a><div class="brand">PENSIEVE</div><span></span></div><div class="stack-lg"><div class="stack"><div class="eyebrow">I’m listening</div><h1>What happened?</h1><p class="sub">Tell me what crossed a line or got under your skin.</p></div><textarea placeholder="What happened?"></textarea><div class="reflection">Before deciding what to do, it may help to understand what the anger is protecting.</div><a class="primary" href="#angry-deep">Go a little deeper</a></div></div></section>
-<section id="angry-deep" class="screen"><div class="scroll"><div class="topbar"><a class="back" href="#angry-start">‹</a><div class="brand">PENSIEVE</div><span></span></div><div class="stack-lg"><h2>Under the anger, what feels most hurt or violated?</h2><textarea placeholder="What is underneath it?"></textarea><div class="reflection">You can respect the anger without letting it choose the next move for you.</div><p class="sub">What response would you be least likely to regret tomorrow?</p><a class="primary" href="#kept">Leave this in the Pensieve</a></div></div></section>
+<section id="angry-start" class="screen conversation"><div class="scroll"><div class="topbar"><a class="back" href="#home">‹</a><div class="brand">PENSIEVE</div><span></span></div><div class="stack-lg"><div class="stack"><div class="eyebrow">I’m listening</div><h1>What happened?</h1><p class="sub">Tell me what crossed a line or got under your skin.</p></div><textarea placeholder="What happened?"></textarea><div class="reflection">Before deciding what to do, it may help to understand what the anger is protecting.</div><a class="primary" href="#angry-deep">Go a little deeper</a></div></div></section>
+<section id="angry-deep" class="screen conversation"><div class="scroll"><div class="topbar"><a class="back" href="#angry-start">‹</a><div class="brand">PENSIEVE</div><span></span></div><div class="stack-lg"><h2>Under the anger, what feels most hurt or violated?</h2><textarea placeholder="What is underneath it?"></textarea><div class="reflection">You can respect the anger without letting it choose the next move for you.</div><p class="sub">What response would you be least likely to regret tomorrow?</p><a class="primary" href="#kept">Leave this in the Pensieve</a></div></div></section>
 
-<section id="motivation-start" class="screen"><div class="scroll"><div class="topbar"><a class="back" href="#home">‹</a><div class="brand">PENSIEVE</div><span></span></div><div class="stack-lg"><div class="stack"><div class="eyebrow">I’m listening</div><h1>What are you struggling to make yourself do?</h1><p class="sub">Tell me what you keep meaning to do but can’t seem to start.</p></div><textarea placeholder="What are you trying to make yourself do?"></textarea><div class="reflection">Before we push harder, let’s find out whether motivation is actually the problem.</div><a class="primary" href="#motivation-deep">Go a little deeper</a></div></div></section>
-<section id="motivation-deep" class="screen"><div class="scroll"><div class="topbar"><a class="back" href="#motivation-start">‹</a><div class="brand">PENSIEVE</div><span></span></div><div class="stack-lg"><h2>What happens inside you when you think about starting?</h2><textarea placeholder="Fear? Tiredness? Avoidance? Overwhelm?"></textarea><div class="reflection">I don’t think pushing yourself harder is automatically the answer.</div><p class="sub">What is the smallest version of starting that feels possible?</p><a class="primary" href="#kept">Leave this in the Pensieve</a></div></div></section>
-
-<section id="free-start" class="screen"><div class="scroll"><div class="topbar"><a class="back" href="#home">‹</a><div class="brand">PENSIEVE</div><span></span></div><div class="stack-lg"><div class="stack"><div class="eyebrow">I’m listening</div><h1>What’s on your mind?</h1><p class="sub">There’s no right or wrong. Just tell me what you’re thinking or feeling.</p></div><textarea placeholder="Take your time…"></textarea><a class="primary" href="#free-deep">Continue</a></div></div></section>
-<section id="free-deep" class="screen"><div class="scroll"><div class="topbar"><a class="back" href="#free-start">‹</a><div class="brand">PENSIEVE</div><span></span></div><div class="stack-lg"><h2>What feels most important underneath all of this?</h2><textarea placeholder="What feels true?"></textarea><div class="reflection">You’ve made the thought a little clearer.</div><p class="sub">What do you want to carry with you from this?</p><a class="primary" href="#kept">Leave this in the Pensieve</a></div></div></section>
+<section id="motivation-start" class="screen conversation"><div class="scroll"><div class="topbar"><a class="back" href="#home">‹</a><div class="brand">PENSIEVE</div><span></span></div><div class="stack-lg"><div class="stack"><div class="eyebrow">I’m listening</div><h1>What are you struggling to make yourself do?</h1><p class="sub">Tell me what you keep meaning to do but can’t seem to start.</p></div><textarea placeholder="What are you trying to make yourself do?"></textarea><div class="reflection">Before we push harder, let’s find out whether motivation is actually the problem.</div><a class="primary" href="#motivation-deep">Go a little deeper</a></div></div></section>
+<section id="motivation-deep" class="screen conversation"><div class="scroll"><div class="topbar"><a class="back" href="#motivation-start">‹</a><div class="brand">PENSIEVE</div><span></span></div><div class="stack-lg"><h2>What happens inside you when you think about starting?</h2><textarea placeholder="Fear? Tiredness? Avoidance? Overwhelm?"></textarea><div class="reflection">I don’t think pushing yourself harder is automatically the answer.</div><p class="sub">What is the smallest version of starting that feels possible?</p><a class="primary" href="#kept">Leave this in the Pensieve</a></div></div></section>
 
 <section id="reflections" class="screen"><div class="scroll">
  <div class="topbar"><a class="back" href="#home">‹</a><div class="brand">PENSIEVE</div><span></span></div>

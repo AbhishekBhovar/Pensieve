@@ -1,12 +1,11 @@
-Pensieve 1.7
+Pensieve 1.9
 
-Critical rebuild:
-- Rebuilt navigation without JavaScript.
-- Every app control is now a real HTML link, so Safari/GitHub Pages can navigate even if JavaScript is unavailable.
-- No invisible JavaScript overlay can block buttons.
-- Loading is CSS-only: 4 seconds, 0% on the left, 100% on the right, and a bar that visibly fills between them.
-- No stacked percentage text.
-- Replaced ugly text-symbol bottom nav icons with consistent custom SVG outline icons.
-- Full static reflection flow retained for “I’ve failed”.
-- Other five emotional starter flows included.
+Home-flow change:
+- Removed “What’s on your mind?” free-write entry from the first screen.
+- Removed the “Start a reflection” free-text button.
+- First screen is now choice-first only.
+- Home asks “How are you feeling?” and presents only:
+  Overwhelmed / Grieving / Afraid / Failed / Angry / Need motivation.
+- Removed the unused free-write reflection screens.
+- Existing conversation flows remain unchanged.
 - Locked artwork/logo remain unchanged.

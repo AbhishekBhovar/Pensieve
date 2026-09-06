@@ -1,1 +1,2 @@
-Pensieve 2.2
+Pensieve 2.4
+Locked logo update: edge-to-edge artwork, PENSIEVE title retained, no motto/tagline, no border.

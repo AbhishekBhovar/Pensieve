@@ -1,9 +1,17 @@
-# Locked Pensieve assets — 1.4
+# Asset Lock — Pensieve 2.3
 
-- assets/pensieve-office-LOCKED.png
-  SHA-256: 5a7b50b6ba6b587cf164d501b4314fb7476bbeb09798cf9ef9a59c10c8fa3d29
+## pensieve-logo-LOCKED.png
+Locked icon direction:
+- Keep the word **PENSIEVE**.
+- Keep the Pensieve basin, blue-white memory wisps, gothic magical setting and cinematic finish.
+- No motto, no tagline, no secondary small text.
+- Artwork extends to the square image edge; device/OS applies the icon corner mask.
 
-- assets/pensieve-logo-LOCKED.png
-  SHA-256: d4662f476c394c4a654d8472abfa04e65fabdcf8788e6ff2750fdc329df52d97
+## pensieve-office-LOCKED.png
+Preserve the existing app artwork unless explicitly requested otherwise.
 
-Do not silently regenerate, recompress, replace with CSS approximations, or drastically crop these approved assets.
+## Pensieve 2.4 logo lock
+- `assets/pensieve-logo-LOCKED.png`
+- Edge-to-edge artwork: no border or empty framing.
+- Keep the `PENSIEVE` name.
+- No motto, tagline, or other small text.

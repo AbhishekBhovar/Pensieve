@@ -113,8 +113,13 @@ textarea:focus{border-color:rgba(202,232,245,.34);box-shadow:0 0 0 3px rgba(180,
 .finalbox{padding:12px 13px;border:1px solid var(--line);border-radius:15px;background:#10222d}
 .finalbox strong{font-size:12px;color:#a9bbc5}
 .finalbox textarea{margin-top:8px;min-height:74px;font-size:14px;padding:11px}
-.loading{position:absolute;inset:0;z-index:100;background:#03090e;display:flex;align-items:flex-end;justify-content:center;transition:opacity .55s ease}
-.loading.hide{opacity:0;pointer-events:none}
+.loading{
+  position:absolute;inset:0;z-index:100;background:#03090e;
+  display:flex;align-items:flex-end;justify-content:center;
+  transition:opacity .45s ease;
+  animation:loadingExit .45s ease 5s forwards;
+}
+.loading.hide{opacity:0;visibility:hidden;pointer-events:none}
 .loading-bg{
   position:absolute;
   inset:0;
@@ -129,9 +134,12 @@ textarea:focus{border-color:rgba(202,232,245,.34);box-shadow:0 0 0 3px rgba(180,
 .loading-inner{position:relative;z-index:1;width:100%;padding:0 26px calc(42px + var(--safe-bottom));text-align:center}
 .loading-title{font-family:Georgia,"Times New Roman",serif;letter-spacing:.29em;font-size:25px}
 .loading-sub{font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:#b6cad5;margin-top:8px}
-.loader{height:3px;border-radius:99px;background:rgba(209,234,245,.15);margin:22px auto 0;max-width:180px;overflow:hidden}
-.loader i{display:block;height:100%;width:42%;border-radius:99px;background:#cceaf7;animation:load 1.5s ease-in-out infinite}
-@keyframes load{0%{transform:translateX(-110%)}100%{transform:translateX(350%)}}
+.progress-wrap{margin:20px auto 0;max-width:220px}
+.progress-meta{display:flex;justify-content:space-between;align-items:center;margin-bottom:7px;color:#9fb7c4;font-size:10px;letter-spacing:.08em;text-transform:uppercase}
+.loader{height:4px;border-radius:99px;background:rgba(209,234,245,.14);overflow:hidden;box-shadow:inset 0 0 0 1px rgba(255,255,255,.02)}
+.loader i{display:block;height:100%;width:0;border-radius:99px;background:linear-gradient(90deg,#8fc9e3,#e5f7ff);box-shadow:0 0 12px rgba(178,226,247,.55);animation:progressFill 5s linear forwards}
+@keyframes progressFill{from{width:0}to{width:100%}}
+@keyframes loadingExit{to{opacity:0;visibility:hidden;pointer-events:none}}
 @media(max-height:760px){
   .hero{height:205px}
   .scroll{padding-top:calc(10px + var(--safe-top))}
@@ -147,31 +155,44 @@ textarea:focus{border-color:rgba(202,232,245,.34);box-shadow:0 0 0 3px rgba(180,
 
 .memory-sparkles{
   position:absolute;
-  z-index:1;
+  z-index:2;
   left:50%;
   top:24%;
-  width:min(76vw,320px);
-  height:190px;
+  width:min(92vw,390px);
+  height:390px;
   transform:translateX(-50%);
   pointer-events:none;
 }
 .sp{
   position:absolute;
-  color:rgba(222,245,255,.9);
-  font-style:normal;
-  text-shadow:0 0 7px rgba(191,231,249,.9),0 0 16px rgba(151,211,238,.45);
-  animation:sparkle 2.4s ease-in-out infinite;
+  width:5px;height:5px;border-radius:50%;
+  background:#effbff;
+  box-shadow:0 0 6px #e7f8ff,0 0 14px rgba(174,224,247,.95),0 0 28px rgba(139,205,236,.38);
+  color:transparent;
+  animation:sparkle 1.9s ease-in-out infinite;
 }
-.s1{left:18%;top:34%;font-size:11px;animation-delay:-.3s}
-.s2{left:32%;top:17%;font-size:20px;animation-delay:-1.2s}
-.s3{left:48%;top:5%;font-size:13px;animation-delay:-.7s}
-.s4{left:63%;top:21%;font-size:21px;animation-delay:-1.7s}
-.s5{left:78%;top:38%;font-size:10px;animation-delay:-.9s}
-.s6{left:55%;top:42%;font-size:18px;animation-delay:-2.0s}
+.sp:after{
+  content:"";
+  position:absolute;left:50%;top:50%;width:1px;height:15px;
+  transform:translate(-50%,-50%);
+  background:linear-gradient(transparent,rgba(237,250,255,.9),transparent);
+}
+.sp:before{
+  content:"";
+  position:absolute;left:50%;top:50%;width:15px;height:1px;
+  transform:translate(-50%,-50%);
+  background:linear-gradient(90deg,transparent,rgba(237,250,255,.9),transparent);
+}
+.s1{left:17%;top:46%;animation-delay:-.2s}
+.s2{left:30%;top:32%;animation-delay:-1.1s;transform:scale(.7)}
+.s3{left:45%;top:52%;animation-delay:-.6s;transform:scale(.85)}
+.s4{left:61%;top:36%;animation-delay:-1.5s;transform:scale(.65)}
+.s5{left:77%;top:48%;animation-delay:-.8s}
+.s6{left:55%;top:19%;animation-delay:-1.8s;transform:scale(.65)}
 @keyframes sparkle{
-  0%,100%{opacity:.16;transform:translateY(4px) scale(.78)}
-  45%{opacity:.95;transform:translateY(-5px) scale(1.08)}
-  65%{opacity:.45;transform:translateY(-8px) scale(.92)}
+  0%,100%{opacity:.12;filter:blur(.25px)}
+  45%{opacity:1;filter:blur(0)}
+  60%{opacity:.55}
 }
 
 </style>
@@ -188,7 +209,10 @@ textarea:focus{border-color:rgba(202,232,245,.34);box-shadow:0 0 0 3px rgba(180,
   <div class="loading-inner">
     <div class="loading-title">PENSIEVE</div>
     <div class="loading-sub">Preparing a quiet place for your thoughts</div>
-    <div class="loader"><i></i></div>
+    <div class="progress-wrap">
+      <div class="progress-meta"><span>Opening the Pensieve</span><span id="loadPct">0%</span></div>
+      <div class="loader"><i></i></div>
+    </div>
   </div>
 </div>
 
@@ -476,7 +500,34 @@ function genericClose(){
  renderConversation(`<div class="stack-lg" style="text-align:center;padding-top:28px"><div class="hero" style="height:245px;background-position:center 45%"></div><div class="stack"><div class="eyebrow">Memory kept</div><h1>You can leave this here for now.</h1><p class="sub">You don’t have to solve everything before you move on with your day.</p></div><button class="primary" onclick="showView('home')">Back to home</button></div>`);
 }
 
-setTimeout(()=>document.getElementById('loading').classList.add('hide'),5000);
+(() => {
+  const loading = document.getElementById('loading');
+  const pct = document.getElementById('loadPct');
+  const duration = 5000;
+  const started = performance.now();
+
+  function tick(now){
+    const elapsed = Math.min(duration, now - started);
+    const value = Math.round((elapsed / duration) * 100);
+    if (pct) pct.textContent = value + '%';
+    if (elapsed < duration) {
+      requestAnimationFrame(tick);
+    } else {
+      if (pct) pct.textContent = '100%';
+      loading.classList.add('hide');
+      setTimeout(() => loading.remove(), 500);
+    }
+  }
+  requestAnimationFrame(tick);
+
+  // Independent watchdog: loading can never trap the app.
+  setTimeout(() => {
+    if (document.getElementById('loading')) {
+      loading.classList.add('hide');
+      setTimeout(() => loading.remove(), 500);
+    }
+  }, 5600);
+})();
 </script>
 </body>
 </html>

@@ -1,11 +1,1 @@
-Pensieve 2.0
-
-Major interface rebuild:
-- Inactive screens use display:none and cannot visually overlap.
-- Exactly one screen is active at any time.
-- Removed the free-write Home entry permanently.
-- Home is choice-first only with the six feeling options.
-- Bottom navigation hides during conversations and reappears only on Home/Reflections/Insights/More.
-- Routing uses one tiny explicit controller and no layered :target UI.
-- Loading remains 4 seconds with 0% and 100% endpoints and a filling bar.
-- Locked Pensieve artwork and logo retained unchanged.
+Pensieve 2.1

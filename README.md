@@ -1,23 +1,10 @@
-# Pensieve — Repository Build
+# Pensieve 2.1
 
-Upload the **contents** of this folder to the root of your GitHub Pages repository.
+Upload the contents of this folder to the repository root. Keep the `assets` folder beside `index.html`.
 
-## Structure
-- `index.html`
-- `assets/pensieve-office-LOCKED.png`
-- `ASSET_LOCK.md`
-
-## Important
-The Pensieve artwork is included at its original generated PNG quality and is treated as a locked production asset.
-It is not recreated with CSS, recompressed to JPEG, or silently replaced.
-
-The build includes:
-- themed loading screen using the locked artwork
-- Home
-- all six emotional entry points
-- full “I’ve failed” conversational path
-- tailored flows for the other five states
-- Reflections / Memory Pool
-- Insights
-- More / Settings
-- iPhone-oriented compact conversation layouts
+## Fixes in 2.1
+- Reflection rows are fully tappable and open reflection detail screens.
+- All four Insights cards are fully tappable and open detail screens.
+- “You’ve been here before” opens the related past reflection.
+- Removed the disliked “pile / piling up” wording from the overwhelmed flow.
+- Existing locked Pensieve artwork and 4-second loading screen are preserved.

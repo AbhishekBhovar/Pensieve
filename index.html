@@ -23,7 +23,7 @@
 *{box-sizing:border-box}
 html,body{margin:0;min-height:100%;background:var(--night);color:var(--text)}
 body{
-  font-family:ui-rounded,-apple-system,BlinkMacSystemFont,"SF Pro Text","Segoe UI",sans-serif;
+  font-family:-apple-system,BlinkMacSystemFont,"SF Pro Text","Segoe UI",sans-serif;
   -webkit-font-smoothing:antialiased;
   background:
     radial-gradient(ellipse at 50% -5%, rgba(124,177,205,.17), transparent 30%),
@@ -47,61 +47,97 @@ body{
 }
 .brand{
   text-align:center;
-  font-family:Georgia,"Times New Roman",serif;
-  letter-spacing:.28em;
+  font-family:-apple-system,BlinkMacSystemFont,"SF Pro Text","Segoe UI",sans-serif;
+  font-weight:650;
+  letter-spacing:.24em;
   font-size:12px;
   color:#d2dde3;
   text-shadow:0 0 18px rgba(204,235,249,.13);
 }
 .basin{
   position:absolute;
-  left:50%;top:44px;
+  left:50%;
+  top:48px;
   transform:translateX(-50%);
-  width:174px;height:72px;border-radius:50%;
+  width:168px;
+  height:76px;
+  border-radius:50% 50% 44% 44% / 30% 30% 68% 68%;
   background:
-    radial-gradient(ellipse at 50% 44%,
-      rgba(248,253,255,.96) 0%,
-      rgba(205,234,247,.78) 12%,
-      rgba(132,185,212,.53) 29%,
-      rgba(59,102,127,.34) 48%,
-      rgba(21,39,51,.40) 59%,
-      rgba(7,16,25,0) 73%);
-  filter:drop-shadow(0 0 24px rgba(163,216,240,.18));
+    linear-gradient(180deg,
+      #51616c 0%,
+      #34434d 15%,
+      #202d35 45%,
+      #111b22 76%,
+      #091118 100%);
+  border:1px solid rgba(199,216,225,.18);
+  box-shadow:
+    inset 0 8px 12px rgba(255,255,255,.025),
+    inset 0 -14px 18px rgba(0,0,0,.34),
+    0 12px 24px rgba(0,0,0,.24);
 }
 .basin:before{
   content:"";
   position:absolute;
-  left:19px;right:19px;top:15px;bottom:15px;
+  left:13px;
+  right:13px;
+  top:8px;
+  height:31px;
   border-radius:50%;
-  border:1px solid rgba(232,247,253,.33);
+  background:
+    radial-gradient(ellipse at 50% 48%,
+      rgba(240,249,253,.90) 0%,
+      rgba(196,226,240,.72) 18%,
+      rgba(120,172,198,.52) 40%,
+      rgba(57,94,114,.36) 61%,
+      rgba(17,30,39,.88) 74%);
+  border:1px solid rgba(220,237,245,.24);
   box-shadow:
-    inset 0 -6px 12px rgba(5,13,20,.36),
-    0 0 11px rgba(196,232,248,.09);
+    inset 0 -8px 12px rgba(6,16,23,.38),
+    0 0 15px rgba(153,206,231,.10);
 }
 .basin:after{
   content:"";
   position:absolute;
-  left:34px;right:34px;top:24px;bottom:24px;
+  left:24px;
+  right:24px;
+  top:15px;
+  height:13px;
   border-radius:50%;
-  border:1px solid rgba(235,249,255,.20);
+  background:linear-gradient(180deg,rgba(240,250,255,.16),rgba(150,204,229,.04));
+  box-shadow:0 0 10px rgba(190,226,243,.08);
 }
 .wisp{
   position:absolute;
-  left:50%;top:31px;
-  width:2px;height:79px;
-  border-radius:999px;
-  background:linear-gradient(to top,rgba(233,248,255,.68),rgba(177,218,238,.28) 45%,transparent);
-  transform-origin:bottom center;
-  filter:blur(.25px) drop-shadow(0 0 4px rgba(196,232,249,.26));
-  opacity:.35;
-  animation:wisp 5.6s ease-in-out infinite;
+  left:50%;
+  top:25px;
+  width:38px;
+  height:82px;
+  border-radius:50%;
+  border-left:1.5px solid rgba(220,241,250,.42);
+  border-top:1px solid rgba(220,241,250,.06);
+  border-right:1px solid transparent;
+  border-bottom:1px solid transparent;
+  filter:drop-shadow(0 0 4px rgba(190,226,243,.18));
+  opacity:.26;
+  transform-origin:50% 100%;
+  animation:wisp 6.4s ease-in-out infinite;
 }
-.w1{transform:translateX(-1px) rotate(1deg)}
-.w2{transform:translateX(-18px) rotate(-9deg);animation-delay:-1.8s}
-.w3{transform:translateX(18px) rotate(10deg);animation-delay:-3.5s}
+.w1{
+  transform:translateX(-16px) rotate(-8deg) scaleX(.65);
+}
+.w2{
+  transform:translateX(-30px) rotate(16deg) scaleX(.55);
+  animation-delay:-2.2s;
+  opacity:.19;
+}
+.w3{
+  transform:translateX(-3px) rotate(-18deg) scaleX(.50);
+  animation-delay:-4.1s;
+  opacity:.17;
+}
 @keyframes wisp{
-  0%,100%{opacity:.16;scale:.88;translate:0 5px}
-  50%{opacity:.48;scale:1.05;translate:0 -4px}
+  0%,100%{opacity:.12;translate:0 6px}
+  50%{opacity:.32;translate:0 -5px}
 }
 .stage{
   flex:1;
@@ -120,21 +156,22 @@ body{
   to{opacity:1;transform:none}
 }
 .kicker{
-  font-size:11px;
-  letter-spacing:.17em;
-  text-transform:uppercase;
+  font-size:13px;
+  letter-spacing:0;
+  text-transform:none;
   color:#8fa5b3;
-  margin-bottom:9px;
+  margin-bottom:15px;
+  font-weight:500;
 }
 h1,h2{
-  font-family:Georgia,"Times New Roman",serif;
-  font-weight:400;
+  font-family:-apple-system,BlinkMacSystemFont,"SF Pro Text","Segoe UI",sans-serif;
+  font-weight:650;
   margin:0;
   letter-spacing:-.012em;
   text-wrap:balance;
 }
-h1{font-size:31px;line-height:1.14}
-h2{font-size:25px;line-height:1.24}
+h1{font-size:27px;line-height:1.24}
+h2{font-size:25px;line-height:1.28}
 p{font-size:16.5px;line-height:1.62;margin:0}
 .sub{
   color:var(--muted);
@@ -142,9 +179,9 @@ p{font-size:16.5px;line-height:1.62;margin:0}
   line-height:1.55;
   max-width:35em;
 }
-.stack{display:grid;gap:12px}
-.space-lg{display:grid;gap:24px}
-.choices{display:grid;gap:10px}
+.stack{display:grid;gap:18px}
+.space-lg{display:grid;gap:34px}
+.choices{display:grid;gap:12px}
 .choice{
   width:100%;
   min-height:58px;
@@ -170,7 +207,7 @@ p{font-size:16.5px;line-height:1.62;margin:0}
 }
 textarea{
   width:100%;
-  min-height:118px;
+  min-height:168px;
   resize:vertical;
   border-radius:19px;
   border:1px solid rgba(217,236,245,.13);
@@ -192,11 +229,11 @@ textarea:focus{
 button{appearance:none;border:0;font:inherit;cursor:pointer;-webkit-tap-highlight-color:transparent}
 .primary{
   width:100%;
-  min-height:52px;
-  border-radius:17px;
+  min-height:50px;
+  border-radius:16px;
   background:linear-gradient(180deg,#edf8fc 0%,#d3eaf4 100%);
   color:var(--ink);
-  font-weight:720;
+  font-weight:650;
   font-size:16.5px;
   padding:13px 17px;
   box-shadow:0 7px 22px rgba(123,185,213,.08),inset 0 1px 0 white;
@@ -204,8 +241,8 @@ button{appearance:none;border:0;font:inherit;cursor:pointer;-webkit-tap-highligh
 .primary:active{transform:translateY(1px)}
 .secondary{
   width:100%;
-  min-height:50px;
-  border-radius:17px;
+  min-height:48px;
+  border-radius:16px;
   border:1px solid rgba(214,233,243,.13);
   background:rgba(27,43,54,.72);
   color:#e6edf1;
@@ -221,37 +258,24 @@ button{appearance:none;border:0;font:inherit;cursor:pointer;-webkit-tap-highligh
 }
 .reflection{
   position:relative;
-  padding:3px 0 3px 17px;
-  border-left:1px solid rgba(196,229,244,.34);
+  padding:0;
   color:#edf2f4;
+  max-width:95%;
 }
-.reflection:before{
-  content:"";
-  position:absolute;
-  left:-2px;top:9px;
-  width:3px;height:20px;border-radius:999px;
-  background:#c8e6f4;
-  box-shadow:0 0 12px rgba(188,226,244,.30);
-}
+.reflection:before{display:none}
 .quote{
   position:relative;
-  padding:5px 3px 5px 18px;
-  border-left:1px solid rgba(205,234,247,.26);
+  padding:0;
+  border:0;
 }
-.quote:before{
-  content:"";
-  position:absolute;
-  width:5px;height:5px;border-radius:50%;
-  left:-3px;top:16px;
-  background:#d9eef8;
-  box-shadow:0 0 12px rgba(198,232,247,.55);
-}
+.quote:before{display:none}
 .quote blockquote{
-  font-family:Georgia,"Times New Roman",serif;
-  font-size:20px;
-  line-height:1.52;
-  margin:0 0 10px;
-  color:#f3f6f7;
+  font-family:-apple-system,BlinkMacSystemFont,"SF Pro Text","Segoe UI",sans-serif;
+  font-size:17px;
+  line-height:1.55;
+  font-weight:500;
+  margin:0 0 9px;
+  color:#eef3f5;
 }
 .who{
   font-size:12.5px;
@@ -296,12 +320,72 @@ button{appearance:none;border:0;font:inherit;cursor:pointer;-webkit-tap-highligh
   .atmosphere{height:136px}
   .basin{top:42px;width:162px;height:67px}
   .stage{padding-top:4px}
-  h1{font-size:29px}
-  h2{font-size:23.5px}
+  h1{font-size:27px}
+  h2{font-size:24px}
   p{font-size:16px}
-  .space-lg{gap:21px}
+  .space-lg{gap:32px}
   .choice{min-height:56px;font-size:16px}
+  textarea{min-height:158px}
 }
+
+/* Final reflection: designed to fit as one complete iPhone screen */
+body.compact-resolution .atmosphere{
+  height:92px;
+}
+body.compact-resolution .basin{
+  top:34px;
+  width:126px;
+  height:57px;
+}
+body.compact-resolution .wisp{
+  top:25px;
+  height:57px;
+}
+body.compact-resolution .stage{
+  padding-top:0;
+}
+body.compact-resolution .space-lg{
+  gap:15px;
+}
+body.compact-resolution .stack{
+  gap:7px;
+}
+body.compact-resolution .kicker{
+  margin-bottom:4px;
+  font-size:12px;
+}
+body.compact-resolution h2{
+  font-size:22px;
+  line-height:1.23;
+}
+body.compact-resolution .sub{
+  font-size:14px;
+  line-height:1.42;
+}
+body.compact-resolution .softnote{
+  padding:12px 13px;
+  border-radius:16px;
+}
+body.compact-resolution .softnote strong{
+  margin-bottom:5px;
+  font-size:13.5px;
+}
+body.compact-resolution .softnote textarea{
+  margin-top:6px !important;
+  min-height:88px !important;
+  padding:11px 12px;
+  border-radius:14px;
+  font-size:14.5px;
+  line-height:1.43;
+}
+body.compact-resolution .softnote:nth-of-type(3) textarea{
+  min-height:62px !important;
+}
+body.compact-resolution .primary{
+  min-height:47px;
+  font-size:15.5px;
+}
+
 @media(prefers-reduced-motion:reduce){
   .screen,.wisp{animation:none!important}
   .choice,.primary{transition:none!important}
@@ -332,7 +416,10 @@ let state={
   takeaway:"One failed attempt doesn't answer what I'm capable of. I need to understand what didn't work rather than turn the result into a judgement about myself."
 };
 
-function render(html){stage.innerHTML=`<section class="screen">${html}</section>`}
+function render(html, mode=""){
+  document.body.classList.toggle("compact-resolution", mode==="compact-resolution");
+  stage.innerHTML=`<section class="screen">${html}</section>`;
+}
 function value(id){return (document.getElementById(id)?.value||"").trim()}
 
 function home(){
@@ -440,7 +527,7 @@ function perspective(){
         <blockquote>“It ain’t about how hard you hit. It’s about how hard you can get hit and keep moving forward.”</blockquote>
         <div class="who">Rocky Balboa</div>
       </div>
-      <p><strong>Maybe the important part isn’t whether you failed. It’s what you decide this failure means.</strong></p>
+      
       <button id="next" class="primary">Bring it back to me</button>
     </div>`);
   document.getElementById('next').onclick=meaning;
@@ -639,16 +726,16 @@ function resolution(){
 
       <div class="softnote">
         <strong>What I’m taking with me</strong>
-        <textarea id="finalTake" style="min-height:145px;margin-top:10px">${state.takeaway}</textarea>
+        <textarea id="finalTake" style="margin-top:10px">${state.takeaway}</textarea>
       </div>
 
       <div class="softnote">
         <strong>My 1% step today</strong>
-        <textarea id="finalStep" style="min-height:105px;margin-top:10px">${state.step}</textarea>
+        <textarea id="finalStep" style="margin-top:10px">${state.step}</textarea>
       </div>
 
       <button id="next" class="primary">Leave this in the Pensieve</button>
-    </div>`);
+    </div>`, "compact-resolution");
   document.getElementById('next').onclick=()=>{
     state.takeaway=value('finalTake')||state.takeaway;
     state.step=value('finalStep')||state.step;

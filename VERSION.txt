@@ -1,11 +1,11 @@
-Pensieve 1.9
+Pensieve 2.0
 
-Home-flow change:
-- Removed “What’s on your mind?” free-write entry from the first screen.
-- Removed the “Start a reflection” free-text button.
-- First screen is now choice-first only.
-- Home asks “How are you feeling?” and presents only:
-  Overwhelmed / Grieving / Afraid / Failed / Angry / Need motivation.
-- Removed the unused free-write reflection screens.
-- Existing conversation flows remain unchanged.
-- Locked artwork/logo remain unchanged.
+Major interface rebuild:
+- Inactive screens use display:none and cannot visually overlap.
+- Exactly one screen is active at any time.
+- Removed the free-write Home entry permanently.
+- Home is choice-first only with the six feeling options.
+- Bottom navigation hides during conversations and reappears only on Home/Reflections/Insights/More.
+- Routing uses one tiny explicit controller and no layered :target UI.
+- Loading remains 4 seconds with 0% and 100% endpoints and a filling bar.
+- Locked Pensieve artwork and logo retained unchanged.

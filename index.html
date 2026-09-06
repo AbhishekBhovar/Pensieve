@@ -6,7 +6,7 @@
 <meta name="theme-color" content="#071018">
 <link rel="apple-touch-icon" href="assets/pensieve-logo-LOCKED.png">
 <title>Pensieve</title>
-<meta name="pensieve-build" content="1.9">
+<meta name="pensieve-build" content="2.0">
 <style>
 :root{
   --bg:#061019;--bg2:#0b1822;--panel:#102430;--panel2:#142d3a;
@@ -20,21 +20,15 @@ a{color:inherit;text-decoration:none;-webkit-tap-highlight-color:transparent}
 .app{position:relative;width:100%;height:100dvh;max-width:430px;margin:auto;overflow:hidden;background:
  radial-gradient(circle at 50% -8%,rgba(111,168,196,.12),transparent 29%),
  linear-gradient(180deg,#0b1822,#071018 58%,#050c12)}
-.screen{
-  position:absolute;
-  inset:0;
-  z-index:0;
-  opacity:0;
-  visibility:hidden;
-  pointer-events:none;
-  background:
-    radial-gradient(circle at 50% -8%,rgba(111,168,196,.12),transparent 29%),
-    linear-gradient(180deg,#0b1822,#071018 58%,#050c12)
-}
-#home{z-index:1;opacity:1;visibility:visible;pointer-events:auto}
-.screen:target{z-index:5;opacity:1;visibility:visible;pointer-events:auto}
+
+.screen{display:none;position:absolute;inset:0;background:
+ radial-gradient(circle at 50% -8%,rgba(111,168,196,.12),transparent 29%),
+ linear-gradient(180deg,#0b1822,#071018 58%,#050c12)}
+.screen.active{display:block}
+
 .scroll{height:100%;overflow:auto;-webkit-overflow-scrolling:touch;padding:calc(14px + var(--safe-top)) 18px calc(92px + var(--safe-bottom));scrollbar-width:none}
 .scroll::-webkit-scrollbar{display:none}
+.conversation .scroll{padding-bottom:calc(28px + var(--safe-bottom))}
 .stack{display:grid;gap:12px}.stack-lg{display:grid;gap:20px}
 h1,h2,h3,p{margin:0}h1,h2,h3{font-family:Georgia,"Times New Roman",serif;font-weight:400}
 h1{font-size:30px;line-height:1.12}h2{font-size:24px;line-height:1.2}h3{font-size:19px}
@@ -43,34 +37,41 @@ h1{font-size:30px;line-height:1.12}h2{font-size:24px;line-height:1.2}h3{font-siz
 .topbar{display:grid;grid-template-columns:38px 1fr 38px;align-items:center;margin-bottom:14px}
 .back{width:36px;height:36px;border-radius:50%;border:1px solid var(--line);display:grid;place-items:center;background:#10242f;font-size:22px}
 .brand{text-align:center;font-family:Georgia,"Times New Roman",serif;letter-spacing:.25em;font-size:13px}
-.hero{height:260px;border-radius:22px;position:relative;overflow:hidden;border:1px solid var(--line);
+
+.hero{height:245px;border-radius:22px;position:relative;overflow:hidden;border:1px solid var(--line);
  background-image:linear-gradient(180deg,rgba(5,12,18,.02),rgba(5,12,18,.05) 52%,rgba(5,12,18,.77) 100%),url("assets/pensieve-office-LOCKED.png");
  background-size:cover;background-position:center 46%;box-shadow:0 18px 40px rgba(0,0,0,.22)}
 .hero-copy{position:absolute;left:18px;right:18px;bottom:16px}.hero h1{font-size:28px;text-shadow:0 2px 10px #000}.hero .sub{color:#d8e3e8;margin-top:6px}
+
 .primary,.secondary,.choice{display:flex;align-items:center;width:100%;border-radius:16px;min-height:52px;padding:13px 15px}
 .primary{justify-content:center;background:linear-gradient(180deg,#e8f6fb,#cbe7f2);color:#071018;font-size:16px;font-weight:730}
 .secondary{justify-content:center;border:1px solid var(--line);background:#10232e;font-weight:650}
 .choice{border:1px solid var(--line);background:linear-gradient(180deg,#162d3a,#10232e);font-weight:620;line-height:1.32}
 .choice:active,.primary:active,.secondary:active{transform:scale(.985)}
-.moodgrid{display:grid;grid-template-columns:1fr 1fr;gap:10px}.mood{min-height:60px}
+.moodgrid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.mood{min-height:64px;padding-left:18px;font-size:16px}
+
 textarea{width:100%;min-height:168px;resize:vertical;border:1px solid var(--line);border-radius:18px;background:#0e202b;color:var(--text);padding:15px;font:inherit;line-height:1.5;outline:none}
 textarea::placeholder{color:#718896}
 .reflection{padding-left:14px;border-left:2px solid #b9ddeb;font-size:16px;line-height:1.52}
 .quote{padding:14px;border:1px solid var(--line);border-radius:15px;background:#0e202b;font-family:Georgia,"Times New Roman",serif;font-size:17px;line-height:1.45}
 .quote small{display:block;margin-top:8px;color:#8fa7b4;font-family:inherit;font-size:12px}
 .finalbox{padding:12px 13px;border:1px solid var(--line);border-radius:15px;background:#10232e}.finalbox strong{font-size:12px;color:#a9bbc5}.finalbox textarea{min-height:75px;margin-top:8px;font-size:14px;padding:11px}
+.card{padding:15px;border:1px solid var(--line);border-radius:17px;background:#0f222d}
 .list{display:grid;gap:5px}.entry{display:grid;grid-template-columns:56px 1fr auto;gap:11px;align-items:center;padding:10px 0;border-bottom:1px solid rgba(219,235,243,.08)}
 .thumb{width:56px;height:56px;border-radius:12px;background:url("assets/pensieve-office-LOCKED.png") center 45%/cover;border:1px solid var(--line)}
 .entry small{display:block;color:#7893a2;font-size:11px;margin-bottom:3px}.entry strong{font-size:14px}.entry p{color:var(--muted);font-size:12px;margin-top:4px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .insight-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}.insight{min-height:132px;padding:15px;border-radius:17px;border:1px solid var(--line);background:linear-gradient(180deg,#122734,#0b1c26)}
 .insight svg{width:26px;height:26px;stroke:#c9e6f3;margin-bottom:15px}.insight strong{font-size:14px}.insight p{font-size:12px;color:var(--muted);margin-top:6px;line-height:1.38}
-.card{padding:15px;border:1px solid var(--line);border-radius:17px;background:#0f222d}
 .setting{display:flex;align-items:center;justify-content:space-between;padding:15px;border-radius:14px;border:1px solid var(--line);background:#10232e}
+
 .nav{position:absolute;z-index:60;left:0;right:0;bottom:0;height:calc(73px + var(--safe-bottom));padding:8px 10px var(--safe-bottom);display:grid;grid-template-columns:repeat(4,1fr);background:rgba(5,14,21,.96);backdrop-filter:blur(18px);border-top:1px solid rgba(219,236,245,.10)}
+.nav.hidden{display:none}
 .nav a{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;color:#738894;font-size:11px}
+.nav a.active{color:#d9edf6}
 .nav svg{width:22px;height:22px;stroke:currentColor;stroke-width:1.8;fill:none;stroke-linecap:round;stroke-linejoin:round}
-.nav a.home-link{color:#d9edf6}
 .nav-label{line-height:1}
+
 .loading{position:absolute;inset:0;z-index:100;display:flex;align-items:flex-end;justify-content:center;background:#03090e;pointer-events:auto;animation:loaderGone .01s linear 4s forwards}
 .loading-bg{position:absolute;inset:0;background:
  linear-gradient(180deg,rgba(2,7,11,.03),rgba(2,7,11,.02) 48%,rgba(2,7,11,.82) 86%,#03090e),
@@ -87,50 +88,12 @@ textarea::placeholder{color:#718896}
 @keyframes fill{from{width:0}to{width:100%}}@keyframes loaderGone{to{opacity:0;visibility:hidden;pointer-events:none}}@keyframes twinkle{0%,100%{opacity:.12}45%{opacity:1}65%{opacity:.45}}
 @media(prefers-reduced-motion:reduce){.spark{animation:none;opacity:.65}.loader i{animation:fill 4s linear forwards!important}.loading{animation:loaderGone .01s linear 4s forwards!important}}
 @media(max-height:760px){.hero{height:220px}.scroll{padding-top:calc(10px + var(--safe-top))}h1{font-size:27px}}
-
-/* Focus mode: conversation screens are full-screen and never show Home underneath. */
-.app:has(.conversation:target) .nav{
-  display:none;
-}
-.app:has(.conversation:target) .conversation:target .scroll{
-  padding-bottom:calc(26px + var(--safe-bottom));
-}
-
-/* Free-writing screens use a calmer vertical rhythm. */
-#free-start .scroll,
-#failed-start .scroll,
-#overwhelmed-start .scroll,
-#grieving-start .scroll,
-#afraid-start .scroll,
-#angry-start .scroll,
-#motivation-start .scroll{
-  padding-top:calc(18px + var(--safe-top));
-}
-#free-start textarea{
-  min-height:210px;
-}
-
-
-/* Pensieve 1.9 — Home is choice-first only */
-#home .hero{
-  height:245px;
-}
-#home .moodgrid{
-  margin-top:2px;
-}
-#home .choice.mood{
-  min-height:64px;
-  justify-content:flex-start;
-  padding-left:18px;
-  font-size:16px;
-}
-
 </style>
 </head>
 <body>
 <div class="app">
 
-<div class="loading" aria-hidden="true">
+<div class="loading" id="loading" aria-hidden="true">
   <div class="loading-bg"></div>
   <div class="sparkles">
     <i class="spark s1"></i><i class="spark s2"></i><i class="spark s3"></i><i class="spark s4"></i>
@@ -149,7 +112,7 @@ textarea::placeholder{color:#718896}
   </div>
 </div>
 
-<section id="home" class="screen">
+<section id="home" class="screen active">
   <div class="scroll">
     <div class="stack-lg">
       <div class="hero">
@@ -158,138 +121,134 @@ textarea::placeholder{color:#718896}
           <p class="sub">Start with what feels closest right now.</p>
         </div>
       </div>
-
       <div class="moodgrid">
-        <a class="choice mood" href="#overwhelmed-start">I’m overwhelmed</a>
-        <a class="choice mood" href="#grieving-start">I’m grieving</a>
-        <a class="choice mood" href="#afraid-start">I’m afraid</a>
-        <a class="choice mood" href="#failed-start">I’ve failed</a>
-        <a class="choice mood" href="#angry-start">I’m angry</a>
-        <a class="choice mood" href="#motivation-start">I need motivation</a>
+        <a class="choice mood" data-route="overwhelmed-start" href="#overwhelmed-start">I’m overwhelmed</a>
+        <a class="choice mood" data-route="grieving-start" href="#grieving-start">I’m grieving</a>
+        <a class="choice mood" data-route="afraid-start" href="#afraid-start">I’m afraid</a>
+        <a class="choice mood" data-route="failed-start" href="#failed-start">I’ve failed</a>
+        <a class="choice mood" data-route="angry-start" href="#angry-start">I’m angry</a>
+        <a class="choice mood" data-route="motivation-start" href="#motivation-start">I need motivation</a>
       </div>
     </div>
   </div>
 </section>
 
 <section id="failed-start" class="screen conversation"><div class="scroll">
-  <div class="topbar"><a class="back" href="#home">‹</a><div class="brand">PENSIEVE</div><span></span></div>
+  <div class="topbar"><a class="back" data-route="home" href="#home">‹</a><div class="brand">PENSIEVE</div><span></span></div>
   <div class="stack-lg"><div class="stack"><div class="eyebrow">I’m listening</div><h1>Tell me what happened.</h1><p class="sub">Give me the short version — just enough for me to understand.</p></div>
-  <textarea placeholder="Write the short version…"></textarea><a class="primary" href="#failed-summary">Continue</a></div>
+  <textarea placeholder="Write the short version…"></textarea><a class="primary" data-route="failed-summary" href="#failed-summary">Continue</a></div>
 </div></section>
 
 <section id="failed-summary" class="screen conversation"><div class="scroll">
-  <div class="topbar"><a class="back" href="#failed-start">‹</a><div class="brand">PENSIEVE</div><span></span></div>
+  <div class="topbar"><a class="back" data-route="failed-start" href="#failed-start">‹</a><div class="brand">PENSIEVE</div><span></span></div>
   <div class="stack-lg"><div class="stack"><div class="eyebrow">I understand</div><div class="reflection">You’ve tried again, it hasn’t gone the way you hoped, and now you’re worried about what this could mean for finishing your degree.</div></div>
   <div class="stack"><h2>Want to go a little deeper?</h2><p class="sub">Tell me what feels most important — what hurt, what you’re worried this means, or anything else sitting with you.</p></div>
-  <a class="primary" href="#failed-deep">Yes, let’s go deeper</a><a class="secondary" href="#failed-perspective">Not right now</a></div>
+  <a class="primary" data-route="failed-deep" href="#failed-deep">Yes, let’s go deeper</a><a class="secondary" data-route="failed-perspective" href="#failed-perspective">Not right now</a></div>
 </div></section>
 
 <section id="failed-deep" class="screen conversation"><div class="scroll">
- <div class="topbar"><a class="back" href="#failed-summary">‹</a><div class="brand">PENSIEVE</div><span></span></div>
+ <div class="topbar"><a class="back" data-route="failed-summary" href="#failed-summary">‹</a><div class="brand">PENSIEVE</div><span></span></div>
  <div class="stack-lg"><div class="stack"><div class="eyebrow">Go deeper</div><h2>What feels hardest about this?</h2><p class="sub">You don’t need to organise it neatly. Just write what feels true.</p></div>
- <textarea placeholder="What feels true right now?"></textarea><a class="primary" href="#failed-hearing">Go deeper</a></div>
+ <textarea placeholder="What feels true right now?"></textarea><a class="primary" data-route="failed-hearing" href="#failed-hearing">Go deeper</a></div>
 </div></section>
 
 <section id="failed-hearing" class="screen conversation"><div class="scroll">
- <div class="topbar"><a class="back" href="#failed-deep">‹</a><div class="brand">PENSIEVE</div><span></span></div>
+ <div class="topbar"><a class="back" data-route="failed-deep" href="#failed-deep">‹</a><div class="brand">PENSIEVE</div><span></span></div>
  <div class="stack-lg"><div class="stack"><div class="eyebrow">What I’m hearing</div><h2>This seems bigger than the exam.</h2></div>
  <p class="sub">You’re disappointed by the result, but what seems to hurt most is what you’re starting to make it mean about you — that maybe you’re not capable, or that you’re falling behind.</p>
  <div class="reflection">A failed attempt and being a failure are not the same thing.</div>
- <a class="primary" href="#failed-perspective">See another perspective →</a><a class="secondary" href="#failed-deep">Not quite</a></div>
+ <a class="primary" data-route="failed-perspective" href="#failed-perspective">See another perspective →</a><a class="secondary" data-route="failed-deep" href="#failed-deep">Not quite</a></div>
 </div></section>
 
 <section id="failed-perspective" class="screen conversation"><div class="scroll">
- <div class="topbar"><a class="back" href="#failed-hearing">‹</a><div class="brand">PENSIEVE</div><span></span></div>
+ <div class="topbar"><a class="back" data-route="failed-hearing" href="#failed-hearing">‹</a><div class="brand">PENSIEVE</div><span></span></div>
  <div class="stack-lg"><div class="stack"><div class="eyebrow">Another perspective</div><p class="sub" style="color:#e9f0f3;font-size:16px">Failing at something can tell you an attempt didn’t work. It can’t, by itself, tell you what you’re capable of.</p></div>
  <div class="quote">“It ain’t about how hard you hit. It’s about how hard you can get hit and keep moving forward.”<small>Rocky Balboa</small></div>
  <div class="stack"><h2>Which feels closest?</h2>
-  <a class="choice" href="#failed-needs">This proves I can’t do it.</a>
-  <a class="choice" href="#failed-needs">Something didn’t work, and I need to understand what.</a>
-  <a class="choice" href="#failed-needs">I know it doesn’t prove I can’t do it — but it still feels that way.</a>
+  <a class="choice" data-route="failed-needs" href="#failed-needs">This proves I can’t do it.</a>
+  <a class="choice" data-route="failed-needs" href="#failed-needs">Something didn’t work, and I need to understand what.</a>
+  <a class="choice" data-route="failed-needs" href="#failed-needs">I know it doesn’t prove I can’t do it — but it still feels that way.</a>
   <textarea style="min-height:88px" placeholder="Or put it in your own words…"></textarea>
- </div><a class="primary" href="#failed-needs">Continue →</a></div>
+ </div><a class="primary" data-route="failed-needs" href="#failed-needs">Continue →</a></div>
 </div></section>
 
 <section id="failed-needs" class="screen conversation"><div class="scroll">
- <div class="topbar"><a class="back" href="#failed-perspective">‹</a><div class="brand">PENSIEVE</div><span></span></div>
+ <div class="topbar"><a class="back" data-route="failed-perspective" href="#failed-perspective">‹</a><div class="brand">PENSIEVE</div><span></span></div>
  <div class="stack-lg"><div class="stack"><div class="eyebrow">Bring it back to you</div><h2>What do you need most from this moment?</h2></div>
- <a class="choice" href="#failed-understand">Understand why this attempt went wrong</a>
- <a class="choice" href="#failed-confidence">Work through what this did to my confidence</a>
- <a class="choice" href="#failed-next">Think about what I want to do next</a></div>
+ <a class="choice" data-route="failed-understand" href="#failed-understand">Understand why this attempt went wrong</a>
+ <a class="choice" data-route="failed-confidence" href="#failed-confidence">Work through what this did to my confidence</a>
+ <a class="choice" data-route="failed-next" href="#failed-next">Think about what I want to do next</a></div>
 </div></section>
 
 <section id="failed-understand" class="screen conversation"><div class="scroll">
- <div class="topbar"><a class="back" href="#failed-needs">‹</a><div class="brand">PENSIEVE</div><span></span></div>
+ <div class="topbar"><a class="back" data-route="failed-needs" href="#failed-needs">‹</a><div class="brand">PENSIEVE</div><span></span></div>
  <div class="stack-lg"><div class="stack"><div class="eyebrow">Look at the attempt</div><h2>What do you think actually went wrong?</h2><p class="sub">Focus on the attempt, not on judging yourself.</p></div>
- <textarea placeholder="What didn’t work?"></textarea>
- <div class="card"><h3>The result and the cause are not the same thing.</h3><p class="sub" style="margin-top:8px">Identifying a part of the approach that didn’t work gives you something to learn from — not just something to feel bad about.</p></div>
- <a class="primary" href="#failed-step">Turn this into a 1% step</a></div>
+ <textarea placeholder="What didn’t work?"></textarea><div class="card"><h3>The result and the cause are not the same thing.</h3><p class="sub" style="margin-top:8px">Identifying a part of the approach that didn’t work gives you something to learn from — not just something to feel bad about.</p></div>
+ <a class="primary" data-route="failed-step" href="#failed-step">Turn this into a 1% step</a></div>
 </div></section>
 
 <section id="failed-confidence" class="screen conversation"><div class="scroll">
- <div class="topbar"><a class="back" href="#failed-needs">‹</a><div class="brand">PENSIEVE</div><span></span></div>
+ <div class="topbar"><a class="back" data-route="failed-needs" href="#failed-needs">‹</a><div class="brand">PENSIEVE</div><span></span></div>
  <div class="stack-lg"><div class="stack"><div class="eyebrow">Confidence</div><h2>What are you doubting about yourself now?</h2><p class="sub">What changed in the way you see yourself after this happened?</p></div>
  <textarea placeholder="What are you starting to believe about yourself?"></textarea>
  <div class="card"><p class="sub" style="color:#e8f0f3">The exam can tell you how you performed on one attempt. It cannot measure the limits of what you’re capable of learning.</p></div>
- <h2>What would you need to see from yourself to start rebuilding some of that confidence?</h2>
- <textarea style="min-height:105px" placeholder="What would help you trust yourself a little more?"></textarea>
- <a class="primary" href="#failed-step">Make that 1% smaller</a></div>
+ <h2>What would you need to see from yourself to start rebuilding some of that confidence?</h2><textarea style="min-height:105px" placeholder="What would help you trust yourself a little more?"></textarea>
+ <a class="primary" data-route="failed-step" href="#failed-step">Make that 1% smaller</a></div>
 </div></section>
 
 <section id="failed-next" class="screen conversation"><div class="scroll">
- <div class="topbar"><a class="back" href="#failed-needs">‹</a><div class="brand">PENSIEVE</div><span></span></div>
+ <div class="topbar"><a class="back" data-route="failed-needs" href="#failed-needs">‹</a><div class="brand">PENSIEVE</div><span></span></div>
  <div class="stack-lg"><div class="stack"><div class="eyebrow">What next</div><h2>What options are you considering?</h2><p class="sub">And what is making the next move hard to choose?</p></div>
  <textarea placeholder="What are the options?"></textarea>
  <div class="card"><h3>You don’t have to choose the whole path today.</h3><p class="sub" style="margin-top:8px">Which option gives you the clearest next piece of information or momentum?</p></div>
- <a class="primary" href="#failed-step">Find my 1% step</a></div>
+ <a class="primary" data-route="failed-step" href="#failed-step">Find my 1% step</a></div>
 </div></section>
 
 <section id="failed-step" class="screen conversation"><div class="scroll">
- <div class="topbar"><a class="back" href="#failed-needs">‹</a><div class="brand">PENSIEVE</div><span></span></div>
+ <div class="topbar"><a class="back" data-route="failed-needs" href="#failed-needs">‹</a><div class="brand">PENSIEVE</div><span></span></div>
  <div class="stack-lg"><div class="stack"><div class="eyebrow">For today</div><h2>What would moving just 1% in the right direction look like today?</h2><p class="sub">One small positive move. Nothing more.</p></div>
- <a class="choice" href="#failed-final">Review my exam feedback and identify one recurring mistake</a>
- <a class="choice" href="#failed-final">Spend 10 minutes working out what went wrong</a>
- <a class="choice" href="#failed-final">Ask someone for help with the part I’m stuck on</a>
- <textarea style="min-height:90px" placeholder="Or write your own step…"></textarea>
- <a class="primary" href="#failed-final">Continue</a></div>
+ <a class="choice" data-route="failed-final" href="#failed-final">Review my exam feedback and identify one recurring mistake</a>
+ <a class="choice" data-route="failed-final" href="#failed-final">Spend 10 minutes working out what went wrong</a>
+ <a class="choice" data-route="failed-final" href="#failed-final">Ask someone for help with the part I’m stuck on</a>
+ <textarea style="min-height:90px" placeholder="Or write your own step…"></textarea><a class="primary" data-route="failed-final" href="#failed-final">Continue</a></div>
 </div></section>
 
 <section id="failed-final" class="screen conversation"><div class="scroll">
- <div class="topbar"><a class="back" href="#failed-step">‹</a><div class="brand">PENSIEVE</div><span></span></div>
+ <div class="topbar"><a class="back" data-route="failed-step" href="#failed-step">‹</a><div class="brand">PENSIEVE</div><span></span></div>
  <div class="stack-lg"><div class="stack"><div class="eyebrow">For today</div><h2>You don’t have to solve the whole future tonight.</h2><p class="sub">Before you leave this here, you can still change either thought.</p></div>
  <div class="finalbox"><strong>What I’m taking with me</strong><textarea>One failed attempt doesn’t answer what I’m capable of. I need to understand what didn’t work rather than turn the result into a judgement about myself.</textarea></div>
  <div class="finalbox"><strong>My 1% step today</strong><textarea>Ask someone for help with the part I’m stuck on.</textarea></div>
- <a class="primary" href="#kept">Leave this in the Pensieve</a></div>
+ <a class="primary" data-route="kept" href="#kept">Leave this in the Pensieve</a></div>
 </div></section>
 
 <section id="kept" class="screen conversation"><div class="scroll">
- <div class="topbar"><a class="back" href="#home">‹</a><div class="brand">PENSIEVE</div><span></span></div>
+ <div class="topbar"><a class="back" data-route="home" href="#home">‹</a><div class="brand">PENSIEVE</div><span></span></div>
  <div class="stack-lg" style="text-align:center;padding-top:18px"><div class="hero" style="height:245px"></div><div class="stack"><div class="eyebrow">Memory kept</div><h1>Thank you for sharing.</h1><p class="sub">You can leave this here for now.</p></div>
- <a class="primary" href="#reflections">View reflections</a><a class="secondary" href="#home">Back to home</a></div>
+ <a class="primary" data-route="reflections" href="#reflections">View reflections</a><a class="secondary" data-route="home" href="#home">Back to home</a></div>
 </div></section>
 
 <section id="overwhelmed-start" class="screen conversation"><div class="scroll">
- <div class="topbar"><a class="back" href="#home">‹</a><div class="brand">PENSIEVE</div><span></span></div>
- <div class="stack-lg"><div class="stack"><div class="eyebrow">I’m listening</div><h1>What feels like too much right now?</h1><p class="sub">Give me the short version. What’s piling up?</p></div><textarea placeholder="What’s piling up?"></textarea>
- <div class="card"><h3>There’s a lot competing for your attention.</h3><p class="sub" style="margin-top:8px">Let’s work out what is making the whole pile feel heaviest.</p></div>
- <a class="primary" href="#overwhelmed-deep">Go a little deeper</a></div>
+ <div class="topbar"><a class="back" data-route="home" href="#home">‹</a><div class="brand">PENSIEVE</div><span></span></div>
+ <div class="stack-lg"><div class="stack"><div class="eyebrow">I’m listening</div><h1>What feels like too much right now?</h1><p class="sub">Give me the short version. What’s piling up?</p></div>
+ <textarea placeholder="What’s piling up?"></textarea><div class="card"><h3>There’s a lot competing for your attention.</h3><p class="sub" style="margin-top:8px">Let’s work out what is making the whole pile feel heaviest.</p></div>
+ <a class="primary" data-route="overwhelmed-deep" href="#overwhelmed-deep">Go a little deeper</a></div>
 </div></section>
-<section id="overwhelmed-deep" class="screen conversation"><div class="scroll"><div class="topbar"><a class="back" href="#overwhelmed-start">‹</a><div class="brand">PENSIEVE</div><span></span></div><div class="stack-lg"><h2>What feels most urgent — and what is simply making the most noise?</h2><textarea placeholder="What feels true?"></textarea><div class="reflection">You don’t have to clear the whole pile.</div><p class="sub">What would create a little breathing room today?</p><a class="primary" href="#kept">Leave this in the Pensieve</a></div></div></section>
+<section id="overwhelmed-deep" class="screen conversation"><div class="scroll"><div class="topbar"><a class="back" data-route="overwhelmed-start" href="#overwhelmed-start">‹</a><div class="brand">PENSIEVE</div><span></span></div><div class="stack-lg"><h2>What feels most urgent — and what is simply making the most noise?</h2><textarea placeholder="What feels true?"></textarea><div class="reflection">You don’t have to clear the whole pile.</div><p class="sub">What would create a little breathing room today?</p><a class="primary" data-route="kept" href="#kept">Leave this in the Pensieve</a></div></div></section>
 
-<section id="grieving-start" class="screen conversation"><div class="scroll"><div class="topbar"><a class="back" href="#home">‹</a><div class="brand">PENSIEVE</div><span></span></div><div class="stack-lg"><div class="stack"><div class="eyebrow">I’m listening</div><h1>What are you carrying today?</h1><p class="sub">Tell me who or what you’re missing, in whatever words come naturally.</p></div><textarea placeholder="Take your time…"></textarea><div class="reflection">There may be nothing to fix here. We can simply stay with what hurts and understand it a little better.</div><a class="primary" href="#grieving-deep">Go a little deeper</a></div></div></section>
-<section id="grieving-deep" class="screen conversation"><div class="scroll"><div class="topbar"><a class="back" href="#grieving-start">‹</a><div class="brand">PENSIEVE</div><span></span></div><div class="stack-lg"><h2>What do you miss most today?</h2><textarea placeholder="Whatever comes to mind…"></textarea><div class="reflection">You don’t have to make this productive.</div><p class="sub">What would feel a little kinder today?</p><a class="primary" href="#kept">Leave this in the Pensieve</a></div></div></section>
+<section id="grieving-start" class="screen conversation"><div class="scroll"><div class="topbar"><a class="back" data-route="home" href="#home">‹</a><div class="brand">PENSIEVE</div><span></span></div><div class="stack-lg"><div class="stack"><div class="eyebrow">I’m listening</div><h1>What are you carrying today?</h1><p class="sub">Tell me who or what you’re missing, in whatever words come naturally.</p></div><textarea placeholder="Take your time…"></textarea><div class="reflection">There may be nothing to fix here. We can simply stay with what hurts and understand it a little better.</div><a class="primary" data-route="grieving-deep" href="#grieving-deep">Go a little deeper</a></div></div></section>
+<section id="grieving-deep" class="screen conversation"><div class="scroll"><div class="topbar"><a class="back" data-route="grieving-start" href="#grieving-start">‹</a><div class="brand">PENSIEVE</div><span></span></div><div class="stack-lg"><h2>What do you miss most today?</h2><textarea placeholder="Whatever comes to mind…"></textarea><div class="reflection">You don’t have to make this productive.</div><p class="sub">What would feel a little kinder today?</p><a class="primary" data-route="kept" href="#kept">Leave this in the Pensieve</a></div></div></section>
 
-<section id="afraid-start" class="screen conversation"><div class="scroll"><div class="topbar"><a class="back" href="#home">‹</a><div class="brand">PENSIEVE</div><span></span></div><div class="stack-lg"><div class="stack"><div class="eyebrow">I’m listening</div><h1>What are you afraid might happen?</h1><p class="sub">Give me the short version — just enough for me to understand.</p></div><textarea placeholder="What are you afraid of?"></textarea><div class="reflection">Part of you is already living inside what might happen.</div><a class="primary" href="#afraid-deep">Go a little deeper</a></div></div></section>
-<section id="afraid-deep" class="screen conversation"><div class="scroll"><div class="topbar"><a class="back" href="#afraid-start">‹</a><div class="brand">PENSIEVE</div><span></span></div><div class="stack-lg"><h2>What are you worried this would mean about your life or about you?</h2><textarea placeholder="What does the fear seem to mean?"></textarea><div class="reflection">Fear is asking for certainty you may not be able to have yet.</div><p class="sub">What is actually within your control today?</p><a class="primary" href="#kept">Leave this in the Pensieve</a></div></div></section>
+<section id="afraid-start" class="screen conversation"><div class="scroll"><div class="topbar"><a class="back" data-route="home" href="#home">‹</a><div class="brand">PENSIEVE</div><span></span></div><div class="stack-lg"><div class="stack"><div class="eyebrow">I’m listening</div><h1>What are you afraid might happen?</h1><p class="sub">Give me the short version — just enough for me to understand.</p></div><textarea placeholder="What are you afraid of?"></textarea><div class="reflection">Part of you is already living inside what might happen.</div><a class="primary" data-route="afraid-deep" href="#afraid-deep">Go a little deeper</a></div></div></section>
+<section id="afraid-deep" class="screen conversation"><div class="scroll"><div class="topbar"><a class="back" data-route="afraid-start" href="#afraid-start">‹</a><div class="brand">PENSIEVE</div><span></span></div><div class="stack-lg"><h2>What are you worried this would mean about your life or about you?</h2><textarea placeholder="What does the fear seem to mean?"></textarea><div class="reflection">Fear is asking for certainty you may not be able to have yet.</div><p class="sub">What is actually within your control today?</p><a class="primary" data-route="kept" href="#kept">Leave this in the Pensieve</a></div></div></section>
 
-<section id="angry-start" class="screen conversation"><div class="scroll"><div class="topbar"><a class="back" href="#home">‹</a><div class="brand">PENSIEVE</div><span></span></div><div class="stack-lg"><div class="stack"><div class="eyebrow">I’m listening</div><h1>What happened?</h1><p class="sub">Tell me what crossed a line or got under your skin.</p></div><textarea placeholder="What happened?"></textarea><div class="reflection">Before deciding what to do, it may help to understand what the anger is protecting.</div><a class="primary" href="#angry-deep">Go a little deeper</a></div></div></section>
-<section id="angry-deep" class="screen conversation"><div class="scroll"><div class="topbar"><a class="back" href="#angry-start">‹</a><div class="brand">PENSIEVE</div><span></span></div><div class="stack-lg"><h2>Under the anger, what feels most hurt or violated?</h2><textarea placeholder="What is underneath it?"></textarea><div class="reflection">You can respect the anger without letting it choose the next move for you.</div><p class="sub">What response would you be least likely to regret tomorrow?</p><a class="primary" href="#kept">Leave this in the Pensieve</a></div></div></section>
+<section id="angry-start" class="screen conversation"><div class="scroll"><div class="topbar"><a class="back" data-route="home" href="#home">‹</a><div class="brand">PENSIEVE</div><span></span></div><div class="stack-lg"><div class="stack"><div class="eyebrow">I’m listening</div><h1>What happened?</h1><p class="sub">Tell me what crossed a line or got under your skin.</p></div><textarea placeholder="What happened?"></textarea><div class="reflection">Before deciding what to do, it may help to understand what the anger is protecting.</div><a class="primary" data-route="angry-deep" href="#angry-deep">Go a little deeper</a></div></div></section>
+<section id="angry-deep" class="screen conversation"><div class="scroll"><div class="topbar"><a class="back" data-route="angry-start" href="#angry-start">‹</a><div class="brand">PENSIEVE</div><span></span></div><div class="stack-lg"><h2>Under the anger, what feels most hurt or violated?</h2><textarea placeholder="What is underneath it?"></textarea><div class="reflection">You can respect the anger without letting it choose the next move for you.</div><p class="sub">What response would you be least likely to regret tomorrow?</p><a class="primary" data-route="kept" href="#kept">Leave this in the Pensieve</a></div></div></section>
 
-<section id="motivation-start" class="screen conversation"><div class="scroll"><div class="topbar"><a class="back" href="#home">‹</a><div class="brand">PENSIEVE</div><span></span></div><div class="stack-lg"><div class="stack"><div class="eyebrow">I’m listening</div><h1>What are you struggling to make yourself do?</h1><p class="sub">Tell me what you keep meaning to do but can’t seem to start.</p></div><textarea placeholder="What are you trying to make yourself do?"></textarea><div class="reflection">Before we push harder, let’s find out whether motivation is actually the problem.</div><a class="primary" href="#motivation-deep">Go a little deeper</a></div></div></section>
-<section id="motivation-deep" class="screen conversation"><div class="scroll"><div class="topbar"><a class="back" href="#motivation-start">‹</a><div class="brand">PENSIEVE</div><span></span></div><div class="stack-lg"><h2>What happens inside you when you think about starting?</h2><textarea placeholder="Fear? Tiredness? Avoidance? Overwhelm?"></textarea><div class="reflection">I don’t think pushing yourself harder is automatically the answer.</div><p class="sub">What is the smallest version of starting that feels possible?</p><a class="primary" href="#kept">Leave this in the Pensieve</a></div></div></section>
+<section id="motivation-start" class="screen conversation"><div class="scroll"><div class="topbar"><a class="back" data-route="home" href="#home">‹</a><div class="brand">PENSIEVE</div><span></span></div><div class="stack-lg"><div class="stack"><div class="eyebrow">I’m listening</div><h1>What are you struggling to make yourself do?</h1><p class="sub">Tell me what you keep meaning to do but can’t seem to start.</p></div><textarea placeholder="What are you trying to make yourself do?"></textarea><div class="reflection">Before we push harder, let’s find out whether motivation is actually the problem.</div><a class="primary" data-route="motivation-deep" href="#motivation-deep">Go a little deeper</a></div></div></section>
+<section id="motivation-deep" class="screen conversation"><div class="scroll"><div class="topbar"><a class="back" data-route="motivation-start" href="#motivation-start">‹</a><div class="brand">PENSIEVE</div><span></span></div><div class="stack-lg"><h2>What happens inside you when you think about starting?</h2><textarea placeholder="Fear? Tiredness? Avoidance? Overwhelm?"></textarea><div class="reflection">I don’t think pushing yourself harder is automatically the answer.</div><p class="sub">What is the smallest version of starting that feels possible?</p><a class="primary" data-route="kept" href="#kept">Leave this in the Pensieve</a></div></div></section>
 
 <section id="reflections" class="screen"><div class="scroll">
- <div class="topbar"><a class="back" href="#home">‹</a><div class="brand">PENSIEVE</div><span></span></div>
+ <div class="topbar"><a class="back" data-route="home" href="#home">‹</a><div class="brand">PENSIEVE</div><span></span></div>
  <div class="stack-lg"><div><h1>Your reflections</h1><p class="sub" style="margin-top:6px">A record of the moments you’ve worked through.</p></div>
  <div class="list">
   <div class="entry"><div class="thumb"></div><div><small>Today</small><strong>Failure and self-doubt</strong><p>One result doesn’t define what I’m capable of.</p></div><span>›</span></div>
@@ -299,30 +258,67 @@ textarea::placeholder{color:#718896}
 </div></section>
 
 <section id="insights" class="screen"><div class="scroll">
- <div class="topbar"><a class="back" href="#home">‹</a><div class="brand">PENSIEVE</div><span></span></div>
+ <div class="topbar"><a class="back" data-route="home" href="#home">‹</a><div class="brand">PENSIEVE</div><span></span></div>
  <div class="stack-lg"><div><h1>Insights</h1><p class="sub" style="margin-top:6px">Noticing patterns. Finding perspective. Growing over time.</p></div>
  <div class="insight-grid">
   <div class="insight"><svg viewBox="0 0 24 24"><path d="M12 3v18M6.5 5.5c-2 1-3.5 3-3.5 5.5s1.5 4.5 3.5 5.5M17.5 5.5c2 1 3.5 3 3.5 5.5s-1.5 4.5-3.5 5.5M8.5 8.5c-1 .7-1.5 1.6-1.5 2.5s.5 1.8 1.5 2.5M15.5 8.5c1 .7 1.5 1.6 1.5 2.5s-.5 1.8-1.5 2.5"/></svg><strong>Common themes</strong><p>What seems to come up most often.</p></div>
   <div class="insight"><svg viewBox="0 0 24 24"><path d="M4 16l4-5 4 3 5-7 3 2"/><path d="M4 20h16"/></svg><strong>Emotional patterns</strong><p>How your feelings have shifted.</p></div>
   <div class="insight"><svg viewBox="0 0 24 24"><path d="M5 19c6-1 10-5 12-12 1 6-1 11-7 13"/><path d="M8 16c3-4 6-6 10-8"/></svg><strong>Growth moments</strong><p>Things you handled differently.</p></div>
   <div class="insight"><svg viewBox="0 0 24 24"><path d="M12 2l3 7 7 3-7 3-3 7-3-7-7-3 7-3z"/></svg><strong>New perspectives</strong><p>Ideas that helped you see differently.</p></div>
- </div>
- <div class="card"><div class="eyebrow">You’ve been here before</div><h3 style="margin-top:8px">Starting can feel heavier than doing.</h3><p class="sub" style="margin-top:8px">A previous reflection said: “The hardest part was getting myself to start. Once I started, I was okay.”</p></div>
+ </div><div class="card"><div class="eyebrow">You’ve been here before</div><h3 style="margin-top:8px">Starting can feel heavier than doing.</h3><p class="sub" style="margin-top:8px">A previous reflection said: “The hardest part was getting myself to start. Once I started, I was okay.”</p></div>
  </div>
 </div></section>
 
 <section id="more" class="screen"><div class="scroll">
- <div class="topbar"><a class="back" href="#home">‹</a><div class="brand">PENSIEVE</div><span></span></div>
+ <div class="topbar"><a class="back" data-route="home" href="#home">‹</a><div class="brand">PENSIEVE</div><span></span></div>
  <div class="stack-lg"><h1>More</h1><div class="stack"><div class="setting"><span>Settings</span><span>›</span></div><div class="setting"><span>Reminders</span><span>›</span></div><div class="setting"><span>Privacy</span><span>›</span></div><div class="setting"><span>About Pensieve</span><span>›</span></div></div></div>
 </div></section>
 
-<nav class="nav" aria-label="Main navigation">
- <a class="home-link" href="#home"><svg viewBox="0 0 24 24"><path d="M3 11.5L12 4l9 7.5"/><path d="M5.5 10.5V20h13v-9.5"/><path d="M9.5 20v-6h5v6"/></svg><span class="nav-label">Home</span></a>
- <a href="#reflections"><svg viewBox="0 0 24 24"><path d="M4 5.5c2.7-.8 5.3-.5 8 1v13c-2.7-1.5-5.3-1.8-8-1z"/><path d="M20 5.5c-2.7-.8-5.3-.5-8 1v13c2.7-1.5 5.3-1.8 8-1z"/></svg><span class="nav-label">Reflections</span></a>
- <a href="#insights"><svg viewBox="0 0 24 24"><path d="M5 19V12"/><path d="M12 19V7"/><path d="M19 19V4"/></svg><span class="nav-label">Insights</span></a>
- <a href="#more"><svg viewBox="0 0 24 24"><circle cx="5" cy="12" r="1.2" fill="currentColor" stroke="none"/><circle cx="12" cy="12" r="1.2" fill="currentColor" stroke="none"/><circle cx="19" cy="12" r="1.2" fill="currentColor" stroke="none"/></svg><span class="nav-label">More</span></a>
+<nav class="nav" id="nav" aria-label="Main navigation">
+ <a data-route="home" data-nav="home" class="active" href="#home"><svg viewBox="0 0 24 24"><path d="M3 11.5L12 4l9 7.5"/><path d="M5.5 10.5V20h13v-9.5"/><path d="M9.5 20v-6h5v6"/></svg><span class="nav-label">Home</span></a>
+ <a data-route="reflections" data-nav="reflections" href="#reflections"><svg viewBox="0 0 24 24"><path d="M4 5.5c2.7-.8 5.3-.5 8 1v13c-2.7-1.5-5.3-1.8-8-1z"/><path d="M20 5.5c-2.7-.8-5.3-.5-8 1v13c2.7-1.5 5.3-1.8 8-1z"/></svg><span class="nav-label">Reflections</span></a>
+ <a data-route="insights" data-nav="insights" href="#insights"><svg viewBox="0 0 24 24"><path d="M5 19V12"/><path d="M12 19V7"/><path d="M19 19V4"/></svg><span class="nav-label">Insights</span></a>
+ <a data-route="more" data-nav="more" href="#more"><svg viewBox="0 0 24 24"><circle cx="5" cy="12" r="1.2" fill="currentColor" stroke="none"/><circle cx="12" cy="12" r="1.2" fill="currentColor" stroke="none"/><circle cx="19" cy="12" r="1.2" fill="currentColor" stroke="none"/></svg><span class="nav-label">More</span></a>
 </nav>
 
 </div>
+<script>
+(function(){
+  const screens=[...document.querySelectorAll('.screen')];
+  const nav=document.getElementById('nav');
+  const navLinks=[...document.querySelectorAll('[data-nav]')];
+
+  function show(id){
+    const target=document.getElementById(id) || document.getElementById('home');
+    screens.forEach(s=>s.classList.toggle('active',s===target));
+    const isConversation=target.classList.contains('conversation');
+    nav.classList.toggle('hidden',isConversation);
+
+    navLinks.forEach(a=>a.classList.toggle('active',a.dataset.nav===target.id));
+    history.replaceState(null,'','#'+target.id);
+  }
+
+  document.addEventListener('click',function(e){
+    const link=e.target.closest('[data-route]');
+    if(!link)return;
+    e.preventDefault();
+    show(link.dataset.route);
+  });
+
+  window.addEventListener('hashchange',function(){
+    show(location.hash.slice(1) || 'home');
+  });
+
+  show(location.hash.slice(1) || 'home');
+
+  const loading=document.getElementById('loading');
+  if(loading){
+    setTimeout(()=>{
+      loading.style.display='none';
+      loading.remove();
+    },4050);
+  }
+})();
+</script>
 </body>
 </html>

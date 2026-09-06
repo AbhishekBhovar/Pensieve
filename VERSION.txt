@@ -1,10 +1,11 @@
-Pensieve 1.2
+Pensieve 1.3
 
-Changes:
-- Removed the redundant PENSIEVE label from the top-left of the Home artwork.
-- Removed Reflections and Insights cards from the main feelings area.
-- Reflections and Insights now live only in the bottom navigation.
-- Fixed iPhone/Safari tap handling for navigation and app controls.
-- Hidden screens can no longer intercept taps.
-- Loading overlay is physically removed after loading so it cannot block the app invisibly.
-- Locked Pensieve artwork preserved unchanged.
+Critical interaction fix:
+- Reworked iPhone/Safari tap handling.
+- Buttons no longer rely only on inline onclick events.
+- touchend is handled directly and mapped to app actions.
+- Click remains as desktop/browser fallback.
+- Loading overlay is physically removed from the DOM after 5 seconds.
+- Added independent loading watchdog.
+- Active controls are explicitly pointer-enabled.
+- Locked Pensieve artwork remains unchanged.

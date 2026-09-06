@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#071018">
 <title>Pensieve</title>
+<meta name="pensieve-build" content="1.3">
 <style>
 :root{
   --bg:#071018;
@@ -123,9 +124,8 @@ textarea:focus{border-color:rgba(202,232,245,.34);box-shadow:0 0 0 3px rgba(180,
   position:absolute;inset:0;z-index:100;background:#03090e;
   display:flex;align-items:flex-end;justify-content:center;
   transition:opacity .45s ease;
-  animation:loadingExit .45s ease 5s forwards;
 }
-.loading.hide{opacity:0;visibility:hidden;pointer-events:none}
+.loading.hide{display:none!important;opacity:0!important;visibility:hidden!important;pointer-events:none!important}
 .loading-bg{
   position:absolute;
   inset:0;
@@ -145,7 +145,7 @@ textarea:focus{border-color:rgba(202,232,245,.34);box-shadow:0 0 0 3px rgba(180,
 .loader{height:4px;border-radius:99px;background:rgba(209,234,245,.14);overflow:hidden;box-shadow:inset 0 0 0 1px rgba(255,255,255,.02)}
 .loader i{display:block;height:100%;width:0;border-radius:99px;background:linear-gradient(90deg,#8fc9e3,#e5f7ff);box-shadow:0 0 12px rgba(178,226,247,.55);animation:progressFill 5s linear forwards}
 @keyframes progressFill{from{width:0}to{width:100%}}
-@keyframes loadingExit{99%{opacity:0;visibility:hidden;pointer-events:none}100%{opacity:0;visibility:hidden;pointer-events:none}}
+100%{opacity:0;visibility:hidden;pointer-events:none}}
 @media(max-height:760px){
   .hero{height:205px}
   .scroll{padding-top:calc(10px + var(--safe-top))}
@@ -199,6 +199,18 @@ textarea:focus{border-color:rgba(202,232,245,.34);box-shadow:0 0 0 3px rgba(180,
   0%,100%{opacity:.12;filter:blur(.25px)}
   45%{opacity:1;filter:blur(0)}
   60%{opacity:.55}
+}
+
+
+.view.active .scroll,
+.view.active button,
+.view.active textarea,
+.nav,
+.nav button {
+  pointer-events:auto !important;
+}
+.hero:before,.hero:after,.loading-bg,.memory-sparkles{
+  pointer-events:none !important;
 }
 
 </style>
@@ -501,56 +513,98 @@ function genericClose(){
 }
 
 
-// iOS/GitHub Pages tap routing: delegated handlers provide a second,
-// independent interaction path in addition to the inline handlers.
-document.addEventListener('click', (e) => {
-  const navButton = e.target.closest('.nav button[data-view]');
-  if (navButton) {
-    e.preventDefault();
-    showView(navButton.dataset.view);
-    return;
-  }
-}, {passive:false});
+// Robust iPhone/Safari tap handling.
+// We handle touchend directly so the app does not depend on inline onclick behaviour.
+let lastTouchAt = 0;
 
-// Physically remove the loading overlay once its exit animation finishes.
-// This guarantees it can never sit invisibly above the app and steal taps.
-const loadingOverlay = document.getElementById('loading');
-if (loadingOverlay) {
-  loadingOverlay.addEventListener('animationend', (e) => {
-    if (e.animationName === 'loadingExit' && loadingOverlay.isConnected) {
-      loadingOverlay.remove();
-    }
-  });
+function runButtonAction(el){
+  if (!el) return;
+  const code = el.getAttribute('onclick') || '';
+
+  let m;
+  if ((m = code.match(/^showView\('([^']+)'\)$/))) return showView(m[1]);
+  if ((m = code.match(/^startMood\('([^']+)'\)$/))) return startMood(m[1]);
+  if (code === 'startReflection()') return startReflection();
+  if (code === 'shortContinue()') return shortContinue();
+  if (code === 'failedDeep()') return failedDeep();
+  if (code === 'perspective()') return perspective();
+  if (code === 'interpret()') return interpret();
+  if ((m = code.match(/^meaning\('([^']+)'\)$/))) return meaning(m[1]);
+  if ((m = code.match(/^support\('([^']+)'\)$/))) return support(m[1]);
+  if (code === 'supportReply()') return supportReply();
+  if (code === 'confidenceReply()') return confidenceReply();
+  if (code === 'nextReply()') return nextReply();
+  if (code === 'onePercent()') return onePercent();
+  if ((m = code.match(/^chooseStep\('([^']*)'\)$/))) return chooseStep(m[1]);
+  if (code.startsWith("chooseStep(document.getElementById('stepOwn')")) {
+    const own = document.getElementById('stepOwn');
+    return chooseStep((own && own.value.trim()) || 'Take one small step');
+  }
+  if (code === 'finalReflection()') return finalReflection();
+  if (code === 'saveReflection()') return saveReflection();
+  if (code === 'genericDeep()') return genericDeep();
+  if (code === 'genericResolve()') return genericResolve();
+  if (code === 'genericClose()') return genericClose();
+
+  const navView = el.dataset && el.dataset.view;
+  if (navView) return showView(navView);
 }
 
+function tappableFromEvent(e){
+  return e.target.closest('button, .mini[onclick]');
+}
+
+document.addEventListener('touchend', (e) => {
+  const el = tappableFromEvent(e);
+  if (!el) return;
+  lastTouchAt = Date.now();
+  e.preventDefault();
+  e.stopPropagation();
+  runButtonAction(el);
+}, {capture:true, passive:false});
+
+document.addEventListener('click', (e) => {
+  if (Date.now() - lastTouchAt < 700) {
+    e.preventDefault();
+    return;
+  }
+  const el = tappableFromEvent(e);
+  if (!el) return;
+  e.preventDefault();
+  runButtonAction(el);
+}, true);
+
+// Loading is a hard 5-second screen, then the DOM node is physically removed.
+// This prevents an invisible overlay from ever stealing taps.
 (() => {
   const loading = document.getElementById('loading');
   const pct = document.getElementById('loadPct');
+  if (!loading) return;
+
   const duration = 5000;
   const started = performance.now();
+
+  function finishLoading(){
+    if (!loading.isConnected) return;
+    if (pct) pct.textContent = '100%';
+    loading.style.pointerEvents = 'none';
+    loading.style.display = 'none';
+    loading.remove();
+  }
 
   function tick(now){
     const elapsed = Math.min(duration, now - started);
     const value = Math.round((elapsed / duration) * 100);
     if (pct) pct.textContent = value + '%';
-    if (elapsed < duration) {
-      requestAnimationFrame(tick);
-    } else {
-      if (pct) pct.textContent = '100%';
-      loading.classList.add('hide');
-      setTimeout(() => loading.remove(), 500);
-    }
+    if (elapsed < duration) requestAnimationFrame(tick);
+    else finishLoading();
   }
-  requestAnimationFrame(tick);
 
-  // Independent watchdog: loading can never trap the app.
-  setTimeout(() => {
-    if (document.getElementById('loading')) {
-      loading.classList.add('hide');
-      setTimeout(() => loading.remove(), 500);
-    }
-  }, 5600);
+  requestAnimationFrame(tick);
+  setTimeout(finishLoading, 5100);
+  setTimeout(finishLoading, 6500); // independent watchdog
 })();
+
 </script>
 </body>
 </html>

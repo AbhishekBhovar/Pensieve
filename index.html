@@ -144,6 +144,36 @@ textarea:focus{border-color:rgba(202,232,245,.34);box-shadow:0 0 0 3px rgba(180,
   -webkit-font-smoothing:antialiased;
 }
 
+
+.memory-sparkles{
+  position:absolute;
+  z-index:1;
+  left:50%;
+  top:24%;
+  width:min(76vw,320px);
+  height:190px;
+  transform:translateX(-50%);
+  pointer-events:none;
+}
+.sp{
+  position:absolute;
+  color:rgba(222,245,255,.9);
+  font-style:normal;
+  text-shadow:0 0 7px rgba(191,231,249,.9),0 0 16px rgba(151,211,238,.45);
+  animation:sparkle 2.4s ease-in-out infinite;
+}
+.s1{left:18%;top:34%;font-size:11px;animation-delay:-.3s}
+.s2{left:32%;top:17%;font-size:20px;animation-delay:-1.2s}
+.s3{left:48%;top:5%;font-size:13px;animation-delay:-.7s}
+.s4{left:63%;top:21%;font-size:21px;animation-delay:-1.7s}
+.s5{left:78%;top:38%;font-size:10px;animation-delay:-.9s}
+.s6{left:55%;top:42%;font-size:18px;animation-delay:-2.0s}
+@keyframes sparkle{
+  0%,100%{opacity:.16;transform:translateY(4px) scale(.78)}
+  45%{opacity:.95;transform:translateY(-5px) scale(1.08)}
+  65%{opacity:.45;transform:translateY(-8px) scale(.92)}
+}
+
 </style>
 </head>
 <body>
@@ -151,6 +181,10 @@ textarea:focus{border-color:rgba(202,232,245,.34);box-shadow:0 0 0 3px rgba(180,
 
 <div id="loading" class="loading">
   <div class="loading-bg"></div>
+  <div class="memory-sparkles" aria-hidden="true">
+    <i class="sp s1">✦</i><i class="sp s2">·</i><i class="sp s3">✧</i>
+    <i class="sp s4">·</i><i class="sp s5">✦</i><i class="sp s6">·</i>
+  </div>
   <div class="loading-inner">
     <div class="loading-title">PENSIEVE</div>
     <div class="loading-sub">Preparing a quiet place for your thoughts</div>
@@ -442,7 +476,7 @@ function genericClose(){
  renderConversation(`<div class="stack-lg" style="text-align:center;padding-top:28px"><div class="hero" style="height:245px;background-position:center 45%"></div><div class="stack"><div class="eyebrow">Memory kept</div><h1>You can leave this here for now.</h1><p class="sub">You don’t have to solve everything before you move on with your day.</p></div><button class="primary" onclick="showView('home')">Back to home</button></div>`);
 }
 
-setTimeout(()=>document.getElementById('loading').classList.add('hide'),1900);
+setTimeout(()=>document.getElementById('loading').classList.add('hide'),5000);
 </script>
 </body>
 </html>

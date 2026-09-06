@@ -1,13 +1,9 @@
-# Locked artwork
+# Locked Pensieve assets — 1.4
 
-The file below is the exact generated artwork approved for the build.
+- assets/pensieve-office-LOCKED.png
+  SHA-256: 5a7b50b6ba6b587cf164d501b4314fb7476bbeb09798cf9ef9a59c10c8fa3d29
 
-- `assets/pensieve-office-LOCKED.png`
-- SHA-256: `5a7b50b6ba6b587cf164d501b4314fb7476bbeb09798cf9ef9a59c10c8fa3d29`
+- assets/pensieve-logo-LOCKED.png
+  SHA-256: d4662f476c394c4a654d8472abfa04e65fabdcf8788e6ff2750fdc329df52d97
 
-Build rule:
-- Do not regenerate it.
-- Do not recompress it.
-- Do not replace it with CSS artwork.
-- Do not make a lower-quality derivative unless explicitly requested.
-- Framing/cropping may be adjusted in CSS, but the source image remains unchanged.
+Do not silently regenerate, recompress, replace with CSS approximations, or drastically crop these approved assets.

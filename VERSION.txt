@@ -1,11 +1,9 @@
-Pensieve 1.3
+Pensieve 1.4
 
-Critical interaction fix:
-- Reworked iPhone/Safari tap handling.
-- Buttons no longer rely only on inline onclick events.
-- touchend is handled directly and mapped to app actions.
-- Click remains as desktop/browser fallback.
-- Loading overlay is physically removed from the DOM after 5 seconds.
-- Added independent loading watchdog.
-- Active controls are explicitly pointer-enabled.
-- Locked Pensieve artwork remains unchanged.
+- Approved edge-to-edge logo locked and added as the iPhone home-screen icon.
+- Loading reduced to 4 seconds.
+- CSS-only loading progress: 0%, 25%, 50%, 75%, 100%.
+- 14 brighter magical sparkles around the Pensieve.
+- CSS fail-safe means the loading screen cannot trap the app even if JavaScript stalls.
+- JavaScript removes the loading overlay after 4.4s as a second safeguard.
+- Removed custom touch interception; buttons use native Safari clicks.

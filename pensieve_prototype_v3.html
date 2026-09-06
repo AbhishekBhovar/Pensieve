@@ -1,0 +1,377 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"/>
+<title>Pensieve Prototype</title>
+<style>
+:root{
+  --bg:#071018;
+  --panel:#0d1721;
+  --text:#eef4f8;
+  --muted:#9fb0bd;
+  --line:rgba(255,255,255,.10);
+  --soft:rgba(255,255,255,.045);
+  --glow:#cfefff;
+}
+*{box-sizing:border-box}
+body{
+  margin:0; min-height:100vh; background:
+    radial-gradient(circle at 50% 6%, rgba(121,174,205,.13), transparent 28%),
+    linear-gradient(#071018,#08121a 55%,#061018);
+  color:var(--text); font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+}
+.wrap{max-width:620px;margin:0 auto;padding:24px 18px 44px;min-height:100vh;display:flex;flex-direction:column}
+.brand{text-align:center;margin:8px 0 22px}
+.brand .name{font-family:Georgia,serif;font-size:14px;letter-spacing:.18em;color:#b9cad5}
+.pool{width:132px;height:46px;border-radius:50%;margin:12px auto 0;background:
+radial-gradient(ellipse at center, rgba(231,247,255,.86) 0%, rgba(128,174,201,.33) 38%, rgba(60,93,114,.12) 63%, transparent 73%);
+filter:drop-shadow(0 0 22px rgba(172,220,245,.12))}
+.conversation{flex:1;display:flex;flex-direction:column;justify-content:center;gap:18px}
+.screen{animation:fade .28s ease}
+@keyframes fade{from{opacity:.15;transform:translateY(7px)}to{opacity:1;transform:none}}
+.eyebrow{font-size:12px;letter-spacing:.11em;text-transform:uppercase;color:var(--muted);margin-bottom:8px}
+h1,h2{font-family:Georgia,serif;font-weight:400;margin:0}
+h1{font-size:30px;line-height:1.15}
+h2{font-size:25px;line-height:1.22}
+p{font-size:17px;line-height:1.62;margin:0}
+.muted{color:var(--muted);font-size:15px}
+.reply{
+  border-left:2px solid rgba(203,235,250,.28);
+  padding:2px 0 2px 14px;
+  color:#e6eef3;
+}
+textarea{
+  width:100%; min-height:132px; border-radius:17px; border:1px solid var(--line);
+  background:var(--soft); color:var(--text); font:inherit; font-size:16px;
+  line-height:1.5; padding:15px; outline:none; resize:vertical;
+}
+textarea:focus{border-color:rgba(195,228,246,.35);box-shadow:0 0 0 3px rgba(182,224,245,.05)}
+button{
+  appearance:none;border:0;border-radius:15px;padding:14px 16px;font:inherit;font-weight:650;
+  min-height:48px;cursor:pointer;
+}
+.primary{background:#e5f3fb;color:#08131c;width:100%}
+.secondary{background:transparent;color:#dce8ef;border:1px solid var(--line);width:100%}
+.quiet{background:transparent;color:#afc1cc;padding:8px 0;min-height:auto;font-weight:500}
+.choices{display:grid;gap:9px}
+.choice{
+  width:100%;text-align:left;background:rgba(255,255,255,.045);color:var(--text);
+  border:1px solid var(--line);font-weight:520;
+}
+.quote{
+  padding:4px 0 4px 17px;border-left:1px solid rgba(214,239,251,.28)
+}
+.quote blockquote{font-family:Georgia,serif;font-size:20px;line-height:1.5;margin:0 0 10px}
+.quote .who{font-size:13px;color:var(--muted);letter-spacing:.04em}
+.takeaway{
+  border:1px solid var(--line);background:rgba(255,255,255,.035);border-radius:17px;padding:15px
+}
+.takeaway strong{display:block;margin-bottom:6px}
+.inline{display:flex;gap:9px}
+.inline button{flex:1}
+.small{font-size:14px}
+.hidden{display:none!important}
+@media(max-width:460px){
+  .wrap{padding:18px 16px 34px}
+  h1{font-size:27px} h2{font-size:23px}
+  p{font-size:16px}
+}
+@media(prefers-reduced-motion:reduce){.screen{animation:none}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="brand">
+    <div class="name">PENSIEVE</div>
+    <div class="pool" aria-hidden="true"></div>
+  </div>
+  <main id="stage" class="conversation"></main>
+</div>
+
+<script>
+const stage = document.getElementById('stage');
+
+let state = {
+  category:"I've failed",
+  short:"",
+  deep:"",
+  interpretation:"It sounds like the result hurt — but what is really weighing on you is what you are starting to make it mean about you.",
+  need:"",
+  step:"",
+  takeaway:"One failed attempt doesn't answer whether I'm capable. I need to understand what didn't work rather than turn the result into a judgement about myself."
+};
+
+function render(html){ stage.innerHTML = `<section class="screen">${html}</section>`; }
+function val(id){ return (document.getElementById(id)?.value||"").trim(); }
+
+function home(){
+  render(`
+    <div>
+      <div class="eyebrow">Pensieve</div>
+      <h1>What’s on your mind?</h1>
+      <p class="muted" style="margin-top:10px">Start wherever you can.</p>
+    </div>
+    <div class="choices">
+      ${["I'm overwhelmed","I'm grieving","I'm afraid","I've failed","I'm angry","I need motivation"].map(x=>`<button class="choice" data-choice="${x}">${x}</button>`).join("")}
+    </div>
+  `);
+  document.querySelectorAll('[data-choice]').forEach(b=>b.onclick=()=>{state.category=b.dataset.choice; shortQuestion();});
+}
+
+function shortQuestion(){
+  const prompt = state.category==="I've failed"
+    ? ["What happened?","What do you mean when you say you’ve failed?","You can give me the short version — just enough for me to understand what happened."]
+    : ["Tell me what happened.","What do you mean?","You can keep it brief. Just give me enough to understand what’s going on."];
+  render(`
+    <div>
+      <div class="eyebrow">I’m listening</div>
+      <h2>${prompt[0]}</h2>
+      <p style="margin-top:12px">${prompt[1]}</p>
+      <p class="muted" style="margin-top:8px">${prompt[2]}</p>
+    </div>
+    <textarea id="short" placeholder="Tell me the short version...">I failed my exam again and I’m worried I won’t finish my degree.</textarea>
+    <button id="continue" class="primary">Continue</button>
+  `);
+  document.getElementById('continue').onclick=()=>{state.short=val('short'); summary();};
+}
+
+function summary(){
+  render(`
+    <div>
+      <div class="eyebrow">I understand</div>
+      <p class="reply">So this isn’t just about one bad exam. You’ve tried again, it hasn’t gone the way you hoped, and now you’re worried about what that might mean for finishing your degree.</p>
+    </div>
+    <div>
+      <h2>Do you want to go into it a little more?</h2>
+      <p class="muted" style="margin-top:10px">If you do, tell me whatever feels important — what happened, how it made you feel, what you’re worried it might mean, or anything else that’s sitting with you.</p>
+    </div>
+    <button id="deeper" class="primary">Yes, let’s go deeper</button>
+    <button id="notnow" class="secondary">Not right now</button>
+  `);
+  document.getElementById('deeper').onclick=deepDive;
+  document.getElementById('notnow').onclick=perspective;
+}
+
+function deepDive(){
+  render(`
+    <div>
+      <div class="eyebrow">Take your time</div>
+      <h2>Tell me a little more.</h2>
+      <p class="muted" style="margin-top:10px">You don’t need to organise it neatly. Just write what feels most important.</p>
+    </div>
+    <textarea id="deep">I’m starting to wonder whether I’m actually capable of doing this. I’m embarrassed that I’ve failed again and I’m scared everyone else is moving forward while I’m stuck.</textarea>
+    <button id="pour" class="primary">Pour a little deeper 〰</button>
+  `);
+  document.getElementById('pour').onclick=()=>{state.deep=val('deep'); interpret();};
+}
+
+function interpret(){
+  render(`
+    <div>
+      <div class="eyebrow">What I think is underneath</div>
+      <h2>I think I understand what’s hurting most.</h2>
+      <p style="margin-top:14px">${state.interpretation}</p>
+      <p style="margin-top:12px">You’re disappointed about what happened, but underneath that you’re starting to question whether you’re capable — and whether you’re falling behind.</p>
+      <p style="margin-top:12px"><strong>A failed attempt and being a failure are two very different things.</strong></p>
+    </div>
+    <button id="perspective" class="primary">See another perspective →</button>
+    <button id="wrong" class="quiet">Not quite</button>
+  `);
+  document.getElementById('perspective').onclick=perspective;
+  document.getElementById('wrong').onclick=notQuite;
+}
+
+function notQuite(){
+  render(`
+    <div>
+      <div class="eyebrow">Tell me what I missed</div>
+      <h2>What doesn’t feel quite right?</h2>
+      <p class="muted" style="margin-top:10px">You can correct me in your own words.</p>
+    </div>
+    <textarea id="correct" placeholder="What I’m really struggling with is..."></textarea>
+    <button id="back" class="primary">That’s closer</button>
+  `);
+  document.getElementById('back').onclick=perspective;
+}
+
+function perspective(){
+  render(`
+    <div>
+      <div class="eyebrow">Another perspective</div>
+      <p>Failing at something can tell you that an attempt didn’t work. It can’t, by itself, tell you what you’re capable of.</p>
+      <p style="margin-top:12px">When you’re hurting, those two things can become very easy to confuse.</p>
+    </div>
+    <div class="quote">
+      <blockquote>“It ain’t about how hard you hit. It’s about how hard you can get hit and keep moving forward.”</blockquote>
+      <div class="who">Rocky Balboa</div>
+    </div>
+    <div>
+      <p><strong>Maybe the important question isn’t whether you failed.</strong></p>
+      <p style="margin-top:8px">It’s what you decide this failure means.</p>
+    </div>
+    <button id="bringback" class="primary">Bring it back to me</button>
+  `);
+  document.getElementById('bringback').onclick=meaningQuestion;
+}
+
+function meaningQuestion(){
+  render(`
+    <div>
+      <div class="eyebrow">Back to you</div>
+      <h2>When you look at what happened, which feels more true?</h2>
+    </div>
+    <div class="choices">
+      <button class="choice meaning">This proves I can’t do it.</button>
+      <button class="choice meaning">Something didn’t work, and I need to understand what.</button>
+      <button class="choice meaning">I know it doesn’t prove I can’t do it — but that’s still how I feel.</button>
+    </div>
+    <textarea id="ownMeaning" placeholder="Or put it in your own words..."></textarea>
+    <button id="meaningNext" class="primary">Continue</button>
+  `);
+  document.querySelectorAll('.meaning').forEach(b=>b.onclick=()=>document.getElementById('ownMeaning').value=b.textContent);
+  document.getElementById('meaningNext').onclick=needQuestion;
+}
+
+function needQuestion(){
+  render(`
+    <div>
+      <div class="eyebrow">What would help now?</div>
+      <p class="reply">I don’t think you need someone to simply tell you to “try harder.” It sounds like you need help deciding what to do with the setback.</p>
+      <h2 style="margin-top:18px">What would help you most right now?</h2>
+    </div>
+    <div class="choices">
+      <button class="choice need" data-need="understand">Understand why this attempt went wrong</button>
+      <button class="choice need" data-need="confidence">Work through what this has done to my confidence</button>
+      <button class="choice need" data-need="next">Think about what I want to do next</button>
+    </div>
+  `);
+  document.querySelectorAll('.need').forEach(b=>b.onclick=()=>{state.need=b.dataset.need; support();});
+}
+
+function support(){
+  let title, body;
+  if(state.need==="understand"){
+    title="Let’s separate the result from the lesson.";
+    body="A setback becomes useful when you can identify what actually went wrong — preparation, strategy, timing, support, circumstances, or something else — without turning the whole thing into a judgement about yourself.";
+  }else if(state.need==="confidence"){
+    title="Your confidence took a hit. That matters.";
+    body="You don’t have to pretend this didn’t hurt. But confidence doesn’t have to come from never failing. It can also come from knowing that failure doesn’t get the final word.";
+  }else{
+    title="Then let’s make the future smaller.";
+    body="You don’t need to solve the degree, the next year, or even the next exam today. You only need to decide what the next useful move is.";
+  }
+  render(`
+    <div>
+      <div class="eyebrow">For right now</div>
+      <h2>${title}</h2>
+      <p style="margin-top:14px">${body}</p>
+    </div>
+    <button id="one" class="primary">Find my 1% step</button>
+  `);
+  document.getElementById('one').onclick=onePercent;
+}
+
+function onePercent(){
+  render(`
+    <div>
+      <div class="eyebrow">Your one percent</div>
+      <h2>What would moving just 1% in the right direction look like today?</h2>
+      <p class="muted" style="margin-top:10px">Not fixing everything. Just one small positive action that makes today slightly better than leaving the fear untouched.</p>
+    </div>
+    <div class="choices">
+      <button class="choice step">Open the feedback and identify one recurring mistake</button>
+      <button class="choice step">Spend 10 minutes reviewing what went wrong</button>
+      <button class="choice step">Write down one thing I’ll change next time</button>
+      <button class="choice step">Ask someone for help with the part I’m stuck on</button>
+    </div>
+    <textarea id="customStep" placeholder="Or choose your own 1% step..."></textarea>
+    <button id="stepNext" class="primary">This is my step for today</button>
+  `);
+  document.querySelectorAll('.step').forEach(b=>b.onclick=()=>document.getElementById('customStep').value=b.textContent);
+  document.getElementById('stepNext').onclick=()=>{
+    state.step=val('customStep')||"Open the feedback and identify one recurring mistake";
+    takeaway();
+  };
+}
+
+function takeaway(){
+  render(`
+    <div>
+      <div class="eyebrow">Before we leave this here</div>
+      <h2>What do you want to take with you from this conversation?</h2>
+      <p class="muted" style="margin-top:10px">Here’s what I think might be worth remembering. Change it if it doesn’t feel like yours.</p>
+    </div>
+    <div class="takeaway">
+      <strong>What I’d carry forward</strong>
+      <p>${state.takeaway}</p>
+    </div>
+    <div class="inline">
+      <button id="keepTake" class="primary">Keep this</button>
+      <button id="editTake" class="secondary">Change it</button>
+    </div>
+  `);
+  document.getElementById('keepTake').onclick=resolution;
+  document.getElementById('editTake').onclick=editTakeaway;
+}
+
+function editTakeaway(){
+  render(`
+    <div>
+      <div class="eyebrow">Make it yours</div>
+      <h2>What do you want to remember?</h2>
+    </div>
+    <textarea id="take">${state.takeaway}</textarea>
+    <button id="saveTake" class="primary">That’s what I want to keep</button>
+  `);
+  document.getElementById('saveTake').onclick=()=>{state.takeaway=val('take')||state.takeaway;resolution();};
+}
+
+function resolution(){
+  render(`
+    <div>
+      <div class="eyebrow">For today</div>
+      <h2>That’s enough for today.</h2>
+      <p style="margin-top:14px">You don’t need to prove that you’ll never fail again.</p>
+      <p style="margin-top:10px">You’ve understood the fear a little better, chosen what you want to carry forward, and found one small way to move.</p>
+    </div>
+    <div class="takeaway">
+      <strong>What I’m taking with me</strong>
+      <p>${state.takeaway}</p>
+    </div>
+    <div class="takeaway">
+      <strong>My 1% step today</strong>
+      <p>${state.step}</p>
+    </div>
+    <button id="memory" class="primary">Leave this in the Pensieve</button>
+  `);
+  document.getElementById('memory').onclick=memory;
+}
+
+function memory(){
+  render(`
+    <div>
+      <div class="eyebrow">Leave the memory?</div>
+      <h2>Keep what mattered — not just what hurt.</h2>
+      <p class="muted" style="margin-top:10px">If this feeling comes back, Pensieve can bring back what you understood today and what helped you move forward.</p>
+    </div>
+    <button id="keep" class="primary">Keep this memory</button>
+    <button id="fade" class="secondary">Let it fade</button>
+    <button id="restart" class="quiet">Start over</button>
+  `);
+  document.getElementById('keep').onclick=()=>render(`
+    <div>
+      <div class="eyebrow">Memory kept</div>
+      <h2>You can come back to this.</h2>
+      <p class="muted" style="margin-top:10px">Not to relive the failure — to remember what you understood when you worked through it.</p>
+    </div>
+    <button id="again" class="primary">Return to Pensieve</button>
+  `), setTimeout(()=>{document.getElementById('again')&&(document.getElementById('again').onclick=home)},0);
+  document.getElementById('fade').onclick=home;
+  document.getElementById('restart').onclick=home;
+}
+
+home();
+</script>
+</body>
+</html>

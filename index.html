@@ -27,12 +27,18 @@ body{min-height:100dvh;overflow:hidden;background:
   radial-gradient(circle at 50% -5%,rgba(102,151,179,.14),transparent 30%),
   linear-gradient(180deg,#0b1721 0%,#071018 56%,#050c12 100%)}
 button,textarea,input{font:inherit}
-button{cursor:pointer;-webkit-tap-highlight-color:transparent}
+button{
+  cursor:pointer;
+  -webkit-tap-highlight-color:transparent;
+  touch-action:manipulation;
+  position:relative;
+  z-index:1;
+}
 .app{width:100%;height:100dvh;max-width:430px;margin:auto;position:relative;overflow:hidden;background:
   radial-gradient(circle at 50% 0,rgba(115,168,196,.10),transparent 27%),
   linear-gradient(180deg,#0a1721,#071018 56%,#050c12)}
-.view{position:absolute;inset:0;display:flex;flex-direction:column;opacity:0;pointer-events:none;transform:translateY(5px);transition:.22s ease}
-.view.active{opacity:1;pointer-events:auto;transform:none}
+.view{position:absolute;inset:0;display:flex;flex-direction:column;opacity:0;visibility:hidden;pointer-events:none;transform:translateY(5px);transition:.22s ease}
+.view.active{opacity:1;visibility:visible;pointer-events:auto;transform:none}
 .scroll{flex:1;overflow:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none;padding:calc(16px + var(--safe-top)) 18px calc(92px + var(--safe-bottom))}
 .scroll::-webkit-scrollbar{display:none}
 .brand{font-family:Georgia,"Times New Roman",serif;letter-spacing:.28em;font-size:14px;text-align:center;color:#e8eef1}
@@ -79,7 +85,7 @@ textarea:focus{border-color:rgba(202,232,245,.34);box-shadow:0 0 0 3px rgba(180,
 .mini span{font-size:12px;color:var(--muted)}
 .moodgrid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
 .mood{min-height:58px;display:flex;align-items:center}
-.nav{position:absolute;left:0;right:0;bottom:0;height:calc(72px + var(--safe-bottom));padding:8px 14px var(--safe-bottom);display:grid;grid-template-columns:repeat(4,1fr);background:rgba(6,15,22,.94);backdrop-filter:blur(20px);border-top:1px solid rgba(219,236,245,.10);z-index:10}
+.nav{position:absolute;left:0;right:0;bottom:0;height:calc(72px + var(--safe-bottom));padding:8px 14px var(--safe-bottom);display:grid;grid-template-columns:repeat(4,1fr);background:rgba(6,15,22,.94);backdrop-filter:blur(20px);border-top:1px solid rgba(219,236,245,.10);z-index:50;pointer-events:auto}
 .nav button{border:0;background:transparent;color:#6f8491;font-size:11px;display:grid;place-items:center;gap:3px}
 .nav button b{font-size:20px;font-weight:500;line-height:1}
 .nav button.active{color:#d8edf6}
@@ -139,7 +145,7 @@ textarea:focus{border-color:rgba(202,232,245,.34);box-shadow:0 0 0 3px rgba(180,
 .loader{height:4px;border-radius:99px;background:rgba(209,234,245,.14);overflow:hidden;box-shadow:inset 0 0 0 1px rgba(255,255,255,.02)}
 .loader i{display:block;height:100%;width:0;border-radius:99px;background:linear-gradient(90deg,#8fc9e3,#e5f7ff);box-shadow:0 0 12px rgba(178,226,247,.55);animation:progressFill 5s linear forwards}
 @keyframes progressFill{from{width:0}to{width:100%}}
-@keyframes loadingExit{to{opacity:0;visibility:hidden;pointer-events:none}}
+@keyframes loadingExit{99%{opacity:0;visibility:hidden;pointer-events:none}100%{opacity:0;visibility:hidden;pointer-events:none}}
 @media(max-height:760px){
   .hero{height:205px}
   .scroll{padding-top:calc(10px + var(--safe-top))}
@@ -221,7 +227,6 @@ textarea:focus{border-color:rgba(202,232,245,.34);box-shadow:0 0 0 3px rgba(180,
     <div class="stack-lg">
       <div class="hero">
         <div class="hero-content">
-          <div class="eyebrow">Pensieve</div>
           <h1>What’s on your mind?</h1>
           <p class="sub" style="margin-top:7px">A quiet place to understand what you’re carrying.</p>
         </div>
@@ -239,11 +244,6 @@ textarea:focus{border-color:rgba(202,232,245,.34);box-shadow:0 0 0 3px rgba(180,
           <button class="choice mood" onclick="startMood('angry')">I’m angry</button>
           <button class="choice mood" onclick="startMood('motivation')">I need motivation</button>
         </div>
-      </div>
-
-      <div class="home-grid">
-        <div class="mini" onclick="showView('reflections')"><div>◫</div><strong>Reflections</strong><span>Your memory pool</span></div>
-        <div class="mini" onclick="showView('insights')"><div>◒</div><strong>Insights</strong><span>Patterns over time</span></div>
       </div>
     </div>
   </div>
@@ -498,6 +498,29 @@ function genericResolve(){
 }
 function genericClose(){
  renderConversation(`<div class="stack-lg" style="text-align:center;padding-top:28px"><div class="hero" style="height:245px;background-position:center 45%"></div><div class="stack"><div class="eyebrow">Memory kept</div><h1>You can leave this here for now.</h1><p class="sub">You don’t have to solve everything before you move on with your day.</p></div><button class="primary" onclick="showView('home')">Back to home</button></div>`);
+}
+
+
+// iOS/GitHub Pages tap routing: delegated handlers provide a second,
+// independent interaction path in addition to the inline handlers.
+document.addEventListener('click', (e) => {
+  const navButton = e.target.closest('.nav button[data-view]');
+  if (navButton) {
+    e.preventDefault();
+    showView(navButton.dataset.view);
+    return;
+  }
+}, {passive:false});
+
+// Physically remove the loading overlay once its exit animation finishes.
+// This guarantees it can never sit invisibly above the app and steal taps.
+const loadingOverlay = document.getElementById('loading');
+if (loadingOverlay) {
+  loadingOverlay.addEventListener('animationend', (e) => {
+    if (e.animationName === 'loadingExit' && loadingOverlay.isConnected) {
+      loadingOverlay.remove();
+    }
+  });
 }
 
 (() => {

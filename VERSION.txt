@@ -1,0 +1,10 @@
+Pensieve 1.2
+
+Changes:
+- Removed the redundant PENSIEVE label from the top-left of the Home artwork.
+- Removed Reflections and Insights cards from the main feelings area.
+- Reflections and Insights now live only in the bottom navigation.
+- Fixed iPhone/Safari tap handling for navigation and app controls.
+- Hidden screens can no longer intercept taps.
+- Loading overlay is physically removed after loading so it cannot block the app invisibly.
+- Locked Pensieve artwork preserved unchanged.

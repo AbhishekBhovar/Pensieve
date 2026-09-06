@@ -1,0 +1,15 @@
+{
+  "name": "Pensieve",
+  "short_name": "Pensieve",
+  "start_url": "./",
+  "display": "standalone",
+  "background_color": "#061019",
+  "theme_color": "#071018",
+  "icons": [
+    {
+      "src": "assets/pensieve-icon-2.5.png",
+      "sizes": "1024x1024",
+      "type": "image/png"
+    }
+  ]
+}

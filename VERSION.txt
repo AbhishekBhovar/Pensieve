@@ -1,2 +1,11 @@
-Pensieve 2.4
-Locked logo update: edge-to-edge artwork, PENSIEVE title retained, no motto/tagline, no border.
+Pensieve 2.5
+
+Changes:
+- Replaced the home-screen icon with the exact approved edge-to-edge Pensieve artwork.
+- Icon contains only the PENSIEVE name — no motto, tagline or extra writing.
+- New versioned icon filename: assets/pensieve-icon-2.5.png (helps defeat iOS icon caching).
+- Removed all test/historical reflection entries.
+- Removed their test reflection detail pages.
+- Reflections now starts genuinely empty.
+- Removed fake historical Insight data as well; Insights now has a clean empty state until real reflections exist.
+- Full reflection/conversation system remains intact.

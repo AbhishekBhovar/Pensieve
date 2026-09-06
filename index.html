@@ -4,9 +4,11 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#071018">
-<link rel="apple-touch-icon" href="assets/pensieve-logo-LOCKED.png">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="assets/pensieve-icon-2.5.png">
+<link rel="icon" type="image/png" href="assets/pensieve-icon-2.5.png">
 <title>Pensieve</title>
-<meta name="pensieve-build" content="2.0">
+<meta name="pensieve-build" content="2.5">
 <style>
 :root{
   --bg:#061019;--bg2:#0b1822;--panel:#102430;--panel2:#142d3a;
@@ -90,6 +92,34 @@ textarea::placeholder{color:#718896}
 @keyframes fill{from{width:0}to{width:100%}}@keyframes loaderGone{to{opacity:0;visibility:hidden;pointer-events:none}}@keyframes twinkle{0%,100%{opacity:.12}45%{opacity:1}65%{opacity:.45}}
 @media(prefers-reduced-motion:reduce){.spark{animation:none;opacity:.65}.loader i{animation:fill 4s linear forwards!important}.loading{animation:loaderGone .01s linear 4s forwards!important}}
 @media(max-height:760px){.hero{height:220px}.scroll{padding-top:calc(10px + var(--safe-top))}h1{font-size:27px}}
+
+.empty-state{
+  min-height:58vh;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  text-align:center;
+  gap:12px;
+  padding:12px 10px 28px;
+}
+.empty-state h2{margin-top:4px}
+.empty-state .sub{max-width:310px}
+.empty-state .primary{margin-top:14px;max-width:340px}
+.empty-basin{
+  width:210px;
+  height:210px;
+  border-radius:28px;
+  background-image:
+    radial-gradient(circle at 50% 44%,rgba(170,220,244,.08),transparent 52%),
+    url("assets/pensieve-office-LOCKED.png");
+  background-size:cover;
+  background-position:center 48%;
+  box-shadow:0 22px 50px rgba(0,0,0,.20);
+  -webkit-mask-image:radial-gradient(circle at 50% 50%,black 58%,transparent 76%);
+  mask-image:radial-gradient(circle at 50% 50%,black 58%,transparent 76%);
+}
+
 </style>
 </head>
 <body>
@@ -272,34 +302,38 @@ textarea::placeholder{color:#718896}
 
 <section id="reflections" class="screen"><div class="scroll">
  <div class="topbar"><a class="back" data-route="home" href="#home">‹</a><div class="brand">PENSIEVE</div><span></span></div>
- <div class="stack-lg"><div><h1>Your reflections</h1><p class="sub" style="margin-top:6px">A record of the moments you’ve worked through.</p></div>
- <div class="list">
-  <a class="entry" data-route="reflection-failure" href="#reflection-failure"><div class="thumb"></div><div><small>Today</small><strong>Failure and self-doubt</strong><p>One result doesn’t define what I’m capable of.</p></div><span>›</span></a>
-  <a class="entry" data-route="reflection-overwhelmed" href="#reflection-overwhelmed"><div class="thumb"></div><div><small>2 Sep</small><strong>Feeling overwhelmed</strong><p>I only needed to decide what mattered first.</p></div><span>›</span></a>
-  <a class="entry" data-route="reflection-difficult" href="#reflection-difficult"><div class="thumb"></div><div><small>28 Aug</small><strong>A difficult day</strong><p>I didn’t need to solve everything tonight.</p></div><span>›</span></a>
- </div></div>
+ <div class="stack-lg">
+   <div><h1>Your reflections</h1><p class="sub" style="margin-top:6px">A record of the moments you’ve worked through.</p></div>
+   <div class="empty-state">
+     <div class="empty-basin" aria-hidden="true"></div>
+     <h2>No reflections yet.</h2>
+     <p class="sub">When you complete a reflection, it will appear here.</p>
+     <a class="primary" data-route="home" href="#home">Start a reflection →</a>
+   </div>
+ </div>
 </div></section>
 
 <section id="insights" class="screen"><div class="scroll">
  <div class="topbar"><a class="back" data-route="home" href="#home">‹</a><div class="brand">PENSIEVE</div><span></span></div>
- <div class="stack-lg"><div><h1>Insights</h1><p class="sub" style="margin-top:6px">Noticing patterns. Finding perspective. Growing over time.</p></div>
- <div class="insight-grid">
-  <a class="insight" data-route="insight-themes" href="#insight-themes"><svg viewBox="0 0 24 24"><path d="M12 3v18M6.5 5.5c-2 1-3.5 3-3.5 5.5s1.5 4.5 3.5 5.5M17.5 5.5c2 1 3.5 3 3.5 5.5s-1.5 4.5-3.5 5.5M8.5 8.5c-1 .7-1.5 1.6-1.5 2.5s.5 1.8 1.5 2.5M15.5 8.5c1 .7 1.5 1.6 1.5 2.5s-.5 1.8-1.5 2.5"/></svg><strong>Common themes</strong><p>What seems to come up most often.</p></a>
-  <a class="insight" data-route="insight-emotions" href="#insight-emotions"><svg viewBox="0 0 24 24"><path d="M4 16l4-5 4 3 5-7 3 2"/><path d="M4 20h16"/></svg><strong>Emotional patterns</strong><p>How your feelings have shifted.</p></a>
-  <a class="insight" data-route="insight-growth" href="#insight-growth"><svg viewBox="0 0 24 24"><path d="M5 19c6-1 10-5 12-12 1 6-1 11-7 13"/><path d="M8 16c3-4 6-6 10-8"/></svg><strong>Growth moments</strong><p>Things you handled differently.</p></a>
-  <a class="insight" data-route="insight-perspectives" href="#insight-perspectives"><svg viewBox="0 0 24 24"><path d="M12 2l3 7 7 3-7 3-3 7-3-7-7-3 7-3z"/></svg><strong>New perspectives</strong><p>Ideas that helped you see differently.</p></a>
- </div><a class="card" data-route="reflection-difficult" href="#reflection-difficult"><div class="eyebrow">You’ve been here before</div><h3 style="margin-top:8px">Starting can feel heavier than doing.</h3><p class="sub" style="margin-top:8px">A previous reflection said: “The hardest part was getting myself to start. Once I started, I was okay.”</p></a>
+ <div class="stack-lg">
+   <div><h1>Insights</h1><p class="sub" style="margin-top:6px">Patterns and perspective will appear as your reflections grow.</p></div>
+   <div class="empty-state">
+     <div class="empty-basin" aria-hidden="true"></div>
+     <h2>Nothing to analyse yet.</h2>
+     <p class="sub">Complete a few reflections and Pensieve will begin noticing themes, changes and useful patterns over time.</p>
+     <a class="primary" data-route="home" href="#home">Start a reflection →</a>
+   </div>
  </div>
 </div></section>
 
 
-<section id="reflection-failure" class="screen"><div class="scroll"><div class="topbar"><a class="back" data-route="reflections" href="#reflections">‹</a><div class="brand">PENSIEVE</div><span></span></div><div class="stack-lg"><div><div class="eyebrow">Today</div><h1>Failure and self-doubt</h1></div><div class="card"><div class="eyebrow">What I was carrying</div><p style="margin-top:8px">I failed my exam again and I’m worried I won’t finish my degree.</p></div><div class="card"><div class="eyebrow">What I understood</div><p style="margin-top:8px">The result started to feel like evidence about who I am, rather than information about one attempt.</p></div><div class="card"><div class="eyebrow">What I’m taking with me</div><p style="margin-top:8px">One failed attempt doesn’t answer what I’m capable of. I need to understand what didn’t work rather than turn the result into a judgement about myself.</p></div><div class="card"><div class="eyebrow">My 1% step</div><p style="margin-top:8px">Ask someone for help with the part I’m stuck on.</p></div></div></div></section>
-<section id="reflection-overwhelmed" class="screen"><div class="scroll"><div class="topbar"><a class="back" data-route="reflections" href="#reflections">‹</a><div class="brand">PENSIEVE</div><span></span></div><div class="stack-lg"><div><div class="eyebrow">2 Sep</div><h1>Feeling overwhelmed</h1></div><div class="card"><div class="eyebrow">What I noticed</div><p style="margin-top:8px">Everything felt equally urgent, which made it difficult to begin anywhere.</p></div><div class="card"><div class="eyebrow">What helped</div><p style="margin-top:8px">I only needed to decide what mattered first. The rest could wait.</p></div></div></div></section>
-<section id="reflection-difficult" class="screen"><div class="scroll"><div class="topbar"><a class="back" data-route="reflections" href="#reflections">‹</a><div class="brand">PENSIEVE</div><span></span></div><div class="stack-lg"><div><div class="eyebrow">28 Aug</div><h1>A difficult day</h1></div><div class="card"><div class="eyebrow">What I was carrying</div><p style="margin-top:8px">I felt stuck before I had even started.</p></div><div class="card"><div class="eyebrow">What I learned</div><p style="margin-top:8px">The hardest part was getting myself to start. Once I started, I was okay.</p></div><div class="reflection">I didn’t need to solve everything tonight.</div></div></div></section>
-<section id="insight-themes" class="screen"><div class="scroll"><div class="topbar"><a class="back" data-route="insights" href="#insights">‹</a><div class="brand">PENSIEVE</div><span></span></div><div class="stack-lg"><div><div class="eyebrow">Insights</div><h1>Common themes</h1><p class="sub" style="margin-top:6px">What keeps returning across your reflections.</p></div><div class="card"><h3>Self-doubt after setbacks</h3><p class="sub" style="margin-top:8px">A difficult result can quickly become a judgement about your ability.</p></div><div class="card"><h3>Starting feels heavier than doing</h3><p class="sub" style="margin-top:8px">Several reflections become easier once the first small action is underway.</p></div></div></div></section>
-<section id="insight-emotions" class="screen"><div class="scroll"><div class="topbar"><a class="back" data-route="insights" href="#insights">‹</a><div class="brand">PENSIEVE</div><span></span></div><div class="stack-lg"><div><div class="eyebrow">Insights</div><h1>Emotional patterns</h1><p class="sub" style="margin-top:6px">How your responses have shifted over time.</p></div><div class="card"><h3>Overwhelm → clarity</h3><p class="sub" style="margin-top:8px">You tend to feel calmer once you separate what needs attention now from what can wait.</p></div><div class="card"><h3>Failure → self-doubt → curiosity</h3><p class="sub" style="margin-top:8px">When you move from judging yourself to examining the attempt, you find something you can actually change.</p></div></div></div></section>
-<section id="insight-growth" class="screen"><div class="scroll"><div class="topbar"><a class="back" data-route="insights" href="#insights">‹</a><div class="brand">PENSIEVE</div><span></span></div><div class="stack-lg"><div><div class="eyebrow">Insights</div><h1>Growth moments</h1><p class="sub" style="margin-top:6px">Times you responded differently than before.</p></div><div class="card"><h3>You looked for the cause, not a verdict.</h3><p class="sub" style="margin-top:8px">Instead of treating one result as proof you couldn’t do it, you started asking what in the approach could change.</p></div></div></div></section>
-<section id="insight-perspectives" class="screen"><div class="scroll"><div class="topbar"><a class="back" data-route="insights" href="#insights">‹</a><div class="brand">PENSIEVE</div><span></span></div><div class="stack-lg"><div><div class="eyebrow">Insights</div><h1>New perspectives</h1><p class="sub" style="margin-top:6px">Ideas that helped you see something differently.</p></div><div class="card"><h3>A result is information, not identity.</h3><p class="sub" style="margin-top:8px">One attempt can show what happened. It cannot, by itself, define the limits of what you can learn.</p></div><div class="card"><h3>You don’t need the whole path.</h3><p class="sub" style="margin-top:8px">Sometimes the next useful move is enough.</p></div></div></div></section>
+
+
+
+
+
+
+
 <section id="more" class="screen"><div class="scroll">
  <div class="topbar"><a class="back" data-route="home" href="#home">‹</a><div class="brand">PENSIEVE</div><span></span></div>
  <div class="stack-lg"><h1>More</h1><div class="stack"><div class="setting"><span>Settings</span><span>›</span></div><div class="setting"><span>Reminders</span><span>›</span></div><div class="setting"><span>Privacy</span><span>›</span></div><div class="setting"><span>About Pensieve</span><span>›</span></div></div></div>

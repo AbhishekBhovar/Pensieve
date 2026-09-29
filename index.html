@@ -8,7 +8,7 @@
 <link rel="apple-touch-icon" href="assets/pensieve-icon-2.5.png">
 <link rel="icon" type="image/png" href="assets/pensieve-icon-2.5.png">
 <title>Pensieve</title>
-<meta name="pensieve-build" content="2.5">
+<meta name="pensieve-build" content="2.7">
 <style>
 :root{
   --bg:#061019;--bg2:#0b1822;--panel:#102430;--panel2:#142d3a;
@@ -120,6 +120,21 @@ textarea::placeholder{color:#718896}
   mask-image:radial-gradient(circle at 50% 50%,black 58%,transparent 76%);
 }
 
+
+.easy-start{display:grid;gap:12px}
+.choice.easy{display:flex;flex-direction:column;align-items:flex-start;gap:5px;padding:17px 18px;text-align:left}
+.choice.easy strong{font-size:17px;color:var(--text);font-weight:700}
+.choice.easy span{font-size:13px;line-height:1.35;color:var(--muted);font-weight:400}
+.low-energy{padding-top:7vh}
+.low-energy .primary,.low-energy .secondary{min-height:58px}
+@media(max-width:430px){.choice.easy{padding:15px 16px}.choice.easy strong{font-size:16px}.choice.easy span{font-size:12.5px}.low-energy{padding-top:4vh}}
+
+.wisdom-card{padding:20px;border-radius:22px;background:linear-gradient(145deg,rgba(132,177,213,.12),rgba(255,255,255,.035));box-shadow:inset 0 0 0 1px rgba(204,231,250,.12),0 18px 45px rgba(0,0,0,.18)}
+.wisdom-label{font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:#9fc6df;margin-bottom:12px}
+.wisdom-quote{font-family:Georgia,serif;font-size:20px;line-height:1.48;color:var(--text);margin:0 0 10px}
+.wisdom-source{font-size:13px;color:var(--muted)}
+.wisdom-context{margin-top:16px;font-size:15px;line-height:1.55;color:var(--text)}
+.wisdom-note{font-size:13px;line-height:1.5;color:var(--muted)}
 </style>
 </head>
 <body>
@@ -145,25 +160,103 @@ textarea::placeholder{color:#718896}
 </div>
 
 <section id="home" class="screen active">
-  <div class="scroll">
-    <div class="stack-lg">
-      <div class="hero">
-        <div class="hero-copy">
-          <h1>How are you feeling?</h1>
-          <p class="sub">Start with what feels closest right now.</p>
-        </div>
-      </div>
-      <div class="moodgrid">
-        <a class="choice mood" data-route="overwhelmed-start" href="#overwhelmed-start">I’m overwhelmed</a>
-        <a class="choice mood" data-route="grieving-start" href="#grieving-start">I’m grieving</a>
-        <a class="choice mood" data-route="afraid-start" href="#afraid-start">I’m afraid</a>
-        <a class="choice mood" data-route="failed-start" href="#failed-start">I’ve failed</a>
-        <a class="choice mood" data-route="angry-start" href="#angry-start">I’m angry</a>
-        <a class="choice mood" data-route="motivation-start" href="#motivation-start">I need motivation</a>
-      </div>
+  <div class="scroll"><div class="stack-lg">
+    <div class="hero"><div class="hero-copy">
+      <h1>How are you right now?</h1>
+      <p class="sub">You don’t need to explain anything yet.</p>
+    </div></div>
+    <div class="easy-start">
+      <a class="choice easy" data-route="struggling" href="#struggling"><strong>I’m struggling</strong><span>I don’t have much in me right now.</span></a>
+      <a class="choice easy" data-route="push" href="#push"><strong>I need a push</strong><span>Help me take the first tiny step.</span></a>
+      <a class="choice easy" data-route="something-happened" href="#something-happened"><strong>Something happened</strong><span>I want to work through it.</span></a>
+      <a class="choice easy" data-route="think-through" href="#think-through"><strong>I want to think something through</strong><span>Help me understand what’s going on.</span></a>
+      <a class="choice easy" data-route="perspective-now" href="#perspective-now"><strong>I’m okay — I just want perspective</strong><span>Give me something useful to sit with.</span></a>
     </div>
-  </div>
+  </div></div>
 </section>
+<section id="struggling" class="screen conversation"><div class="scroll">
+ <div class="topbar"><a class="back" data-route="home" href="#home">‹</a><div class="brand">PENSIEVE</div><span></span></div>
+ <div class="stack-lg low-energy"><div class="stack"><div class="eyebrow">I’m here</div><h1>You don’t need to explain everything.</h1><p class="sub">What would help most right now?</p></div>
+ <a class="choice easy" data-route="push" href="#push"><strong>Help me get moving</strong><span>Just the next tiny thing.</span></a>
+ <a class="choice easy" data-route="stay" href="#stay"><strong>Stay with me for a minute</strong><span>No fixing. No pressure.</span></a>
+ <a class="choice easy" data-route="talk-choice" href="#talk-choice"><strong>I want to talk about it</strong><span>I have enough energy to go a little deeper.</span></a></div>
+</div></section>
+
+<section id="push" class="screen conversation"><div class="scroll">
+ <div class="topbar"><a class="back" data-route="home" href="#home">‹</a><div class="brand">PENSIEVE</div><span></span></div>
+ <div class="stack-lg low-energy"><div class="stack"><div class="eyebrow">Only this moment</div><h1>Forget the whole day.</h1><p class="sub">Can you sit up?</p></div>
+ <a class="primary" data-route="push-feet" href="#push-feet">Yes</a><a class="secondary" data-route="push-not-yet" href="#push-not-yet">Not yet</a></div>
+</div></section>
+
+<section id="push-not-yet" class="screen conversation"><div class="scroll">
+ <div class="topbar"><a class="back" data-route="push" href="#push">‹</a><div class="brand">PENSIEVE</div><span></span></div>
+ <div class="stack-lg low-energy"><div class="stack"><div class="eyebrow">No rush</div><h1>Don’t get up yet.</h1><p class="sub">Just move toward the edge of the bed. That’s all.</p></div>
+ <a class="primary" data-route="push-feet" href="#push-feet">Done</a><a class="secondary" data-route="stay" href="#stay">Stay here with me</a></div>
+</div></section>
+
+<section id="push-feet" class="screen conversation"><div class="scroll">
+ <div class="topbar"><a class="back" data-route="push" href="#push">‹</a><div class="brand">PENSIEVE</div><span></span></div>
+ <div class="stack-lg low-energy"><div class="stack"><div class="eyebrow">Good</div><h1>Feet on the floor?</h1><p class="sub">Nothing else matters yet.</p></div>
+ <a class="primary" data-route="push-stand" href="#push-stand">Yes</a><a class="secondary" data-route="push-not-yet" href="#push-not-yet">Not yet</a></div>
+</div></section>
+
+<section id="push-stand" class="screen conversation"><div class="scroll">
+ <div class="topbar"><a class="back" data-route="push-feet" href="#push-feet">‹</a><div class="brand">PENSIEVE</div><span></span></div>
+ <div class="stack-lg low-energy"><div class="stack"><div class="eyebrow">One more</div><h1>Stand up.</h1><p class="sub">You don’t need to feel ready. Just stand for ten seconds.</p></div>
+ <a class="primary" data-route="push-done" href="#push-done">I’m up</a></div>
+</div></section>
+
+<section id="push-done" class="screen conversation"><div class="scroll">
+ <div class="topbar"><a class="back" data-route="push-stand" href="#push-stand">‹</a><div class="brand">PENSIEVE</div><span></span></div>
+ <div class="stack-lg low-energy"><div class="stack"><div class="eyebrow">That counts</div><h1>You’ve started.</h1><p class="sub">Don’t solve the day. Choose only what comes next.</p></div>
+ <a class="choice" data-route="wisdom-moving" href="#wisdom-moving">Drink some water</a><a class="choice" data-route="wisdom-moving" href="#wisdom-moving">Wash my face</a><a class="choice" data-route="wisdom-moving" href="#wisdom-moving">Open the curtains</a>
+ <a class="secondary" data-route="talk-choice" href="#talk-choice">Now I want to talk</a></div>
+</div></section>
+
+
+<section id="wisdom-moving" class="screen conversation"><div class="scroll">
+<div class="topbar"><a class="back" data-route="push-done" href="#push-done">‹</a><div class="brand">PENSIEVE</div><span></span></div>
+<div class="stack-lg low-energy">
+<div class="stack"><div class="eyebrow">Something to carry with you</div><h1>You moved before you felt ready.</h1><p class="sub">That matters more than waiting for motivation to arrive first.</p></div>
+<div class="wisdom-card"><div class="wisdom-label">Story wisdom</div><p class="wisdom-quote">“It ain’t about how hard you hit. It’s about how hard you can get hit and keep moving forward.”</p><div class="wisdom-source">— Rocky Balboa</div><div class="wisdom-context">You didn’t need to fix the whole day. You just needed to move. And you did.</div></div>
+<button class="secondary" id="keep-moving-wisdom" type="button">Keep this wisdom</button>
+<a class="primary" data-route="home" href="#home">Continue my day</a>
+</div></div></section>
+<section id="stay" class="screen conversation"><div class="scroll">
+ <div class="topbar"><a class="back" data-route="struggling" href="#struggling">‹</a><div class="brand">PENSIEVE</div><span></span></div>
+ <div class="stack-lg low-energy"><div class="stack"><div class="eyebrow">No pressure</div><h1>You can stay here for a moment.</h1><p class="sub">Nothing needs to be solved right now.</p></div>
+ <div class="reflection">Let your shoulders drop. Unclench your jaw. Take one slow breath. You only have to be here for this minute.</div>
+ <a class="primary" data-route="push" href="#push">I’m ready for one tiny step</a><a class="secondary" data-route="talk-choice" href="#talk-choice">I want to talk now</a></div>
+</div></section>
+
+<section id="talk-choice" class="screen conversation"><div class="scroll">
+ <div class="topbar"><a class="back" data-route="struggling" href="#struggling">‹</a><div class="brand">PENSIEVE</div><span></span></div>
+ <div class="stack-lg"><div class="stack"><div class="eyebrow">I’m listening</div><h1>What feels closest?</h1><p class="sub">One tap is enough to begin.</p></div>
+ <div class="moodgrid"><a class="choice mood" data-route="overwhelmed-start" href="#overwhelmed-start">I’m overwhelmed</a><a class="choice mood" data-route="grieving-start" href="#grieving-start">I’m grieving</a><a class="choice mood" data-route="afraid-start" href="#afraid-start">I’m afraid</a><a class="choice mood" data-route="failed-start" href="#failed-start">I’ve failed</a><a class="choice mood" data-route="angry-start" href="#angry-start">I’m angry</a><a class="choice mood" data-route="motivation-start" href="#motivation-start">I need motivation</a></div></div>
+</div></section>
+
+<section id="something-happened" class="screen conversation"><div class="scroll">
+ <div class="topbar"><a class="back" data-route="home" href="#home">‹</a><div class="brand">PENSIEVE</div><span></span></div>
+ <div class="stack-lg"><div class="stack"><div class="eyebrow">We can work through it</div><h1>What did it leave you feeling?</h1></div>
+ <a class="choice" data-route="angry-start" href="#angry-start">Angry or hurt</a><a class="choice" data-route="failed-start" href="#failed-start">Like I failed</a><a class="choice" data-route="afraid-start" href="#afraid-start">Worried or afraid</a><a class="choice" data-route="grieving-start" href="#grieving-start">Grief or loss</a><a class="choice" data-route="overwhelmed-start" href="#overwhelmed-start">Overwhelmed</a></div>
+</div></section>
+
+<section id="think-through" class="screen conversation"><div class="scroll">
+ <div class="topbar"><a class="back" data-route="home" href="#home">‹</a><div class="brand">PENSIEVE</div><span></span></div>
+ <div class="stack-lg"><div class="stack"><div class="eyebrow">Let’s untangle it</div><h1>What kind of thing are you trying to understand?</h1></div>
+ <a class="choice" data-route="overwhelmed-start" href="#overwhelmed-start">Too many things at once</a><a class="choice" data-route="afraid-start" href="#afraid-start">Something I’m worried about</a><a class="choice" data-route="failed-start" href="#failed-start">Something that went wrong</a><a class="choice" data-route="angry-start" href="#angry-start">Something someone did</a><a class="choice" data-route="motivation-start" href="#motivation-start">Why I can’t make myself start</a></div>
+</div></section>
+
+<section id="perspective-now" class="screen conversation"><div class="scroll">
+ <div class="topbar"><a class="back" data-route="home" href="#home">‹</a><div class="brand">PENSIEVE</div><span></span></div>
+ <div class="stack-lg low-energy"><div class="stack"><div class="eyebrow">A thought to keep</div><h1>You don’t need certainty to take the next honest step.</h1></div>
+ <div class="reflection">Sometimes clarity comes after movement, not before it. You can choose what seems right with what you know now, then adjust when you know more.</div>
+<div class="wisdom-card"><div class="wisdom-label">When a story says it well</div><p class="wisdom-quote">“It is our choices… that show what we truly are, far more than our abilities.”</p><div class="wisdom-source">— Albus Dumbledore</div><div class="wisdom-context">Pensieve won’t force a quote into every moment. It appears only when it adds something useful.</div></div>
+<button class="secondary" id="keep-perspective-wisdom" type="button">Keep this wisdom</button>
+
+ <a class="primary" data-route="home" href="#home">That’s enough for now</a><a class="secondary" data-route="think-through" href="#think-through">I want to think something through</a></div>
+</div></section>
+
 
 <section id="failed-start" class="screen conversation"><div class="scroll">
   <div class="topbar"><a class="back" data-route="home" href="#home">‹</a><div class="brand">PENSIEVE</div><span></span></div>
@@ -315,7 +408,7 @@ textarea::placeholder{color:#718896}
 
 <section id="insights" class="screen"><div class="scroll">
  <div class="topbar"><a class="back" data-route="home" href="#home">‹</a><div class="brand">PENSIEVE</div><span></span></div>
- <div class="stack-lg">
+ <div class="stack-lg"><div class="stack"><h2>Wisdom I’ve kept</h2><p class="wisdom-note">Only wisdom you deliberately keep after a meaningful moment appears here.</p><div id="kept-wisdom-list"><p class="sub">Nothing kept yet.</p></div></div>
    <div><h1>Insights</h1><p class="sub" style="margin-top:6px">Patterns and perspective will appear as your reflections grow.</p></div>
    <div class="empty-state">
      <div class="empty-basin" aria-hidden="true"></div>
@@ -383,6 +476,35 @@ textarea::placeholder{color:#718896}
       loading.remove();
     },4050);
   }
+})();
+</script>
+
+<script>
+(function(){
+ const KEY='pensieve_kept_wisdom_v1';
+ function get(){try{return JSON.parse(localStorage.getItem(KEY)||'[]')}catch(e){return []}}
+ function save(item){
+   const a=get();
+   if(!a.some(x=>x.quote===item.quote)){a.unshift({...item,kept:new Date().toISOString()});localStorage.setItem(KEY,JSON.stringify(a))}
+   render();
+ }
+ function render(){
+   const el=document.getElementById('kept-wisdom-list'); if(!el)return;
+   const a=get();
+   if(!a.length){el.innerHTML='<p class="sub">Nothing kept yet. Pensieve will offer wisdom only when it fits the moment.</p>';return}
+   el.innerHTML=a.map(x=>'<div class="wisdom-card" style="margin-top:12px"><div class="wisdom-label">Wisdom I’ve kept</div><p class="wisdom-quote">“'+x.quote+'”</p><div class="wisdom-source">— '+x.source+'</div><div class="wisdom-context">'+x.context+'</div></div>').join('');
+ }
+ document.addEventListener('click',function(e){
+   if(e.target.id==='keep-moving-wisdom'){
+     save({quote:"It ain’t about how hard you hit. It’s about how hard you can get hit and keep moving forward.",source:"Rocky Balboa",context:"Shown after I got myself moving when I had very little energy."});
+     e.target.textContent='Kept in my wisdom';
+   }
+   if(e.target.id==='keep-perspective-wisdom'){
+     save({quote:"It is our choices… that show what we truly are, far more than our abilities.",source:"Albus Dumbledore",context:"Shown when I wanted perspective rather than a full reflection."});
+     e.target.textContent='Kept in my wisdom';
+   }
+ });
+ document.addEventListener('DOMContentLoaded',render); render();
 })();
 </script>
 </body>

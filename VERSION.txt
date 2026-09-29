@@ -1,11 +1,8 @@
-Pensieve 2.5
-
-Changes:
-- Replaced the home-screen icon with the exact approved edge-to-edge Pensieve artwork.
-- Icon contains only the PENSIEVE name — no motto, tagline or extra writing.
-- New versioned icon filename: assets/pensieve-icon-2.5.png (helps defeat iOS icon caching).
-- Removed all test/historical reflection entries.
-- Removed their test reflection detail pages.
-- Reflections now starts genuinely empty.
-- Removed fake historical Insight data as well; Insights now has a clean empty state until real reflections exist.
-- Full reflection/conversation system remains intact.
+Pensieve 2.7
+- Quotes now appear after Pensieve has context, not as an opening distraction.
+- Low-energy Get Moving path surfaces fitting story wisdom only after the user has moved.
+- Added Keep this wisdom.
+- Added Wisdom I've kept to Insights, persisted locally.
+- Perspective route demonstrates contextual quote use.
+- Locked hierarchy: user's past wisdom first when available; fitting story wisdom second; Pensieve perspective third; no quote when none adds value.
+- Full deep reflection system retained.

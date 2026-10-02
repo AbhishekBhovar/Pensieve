@@ -1,8 +1,7 @@
-Pensieve 2.7
-- Quotes now appear after Pensieve has context, not as an opening distraction.
-- Low-energy Get Moving path surfaces fitting story wisdom only after the user has moved.
-- Added Keep this wisdom.
-- Added Wisdom I've kept to Insights, persisted locally.
-- Perspective route demonstrates contextual quote use.
-- Locked hierarchy: user's past wisdom first when available; fitting story wisdom second; Pensieve perspective third; no quote when none adds value.
-- Full deep reflection system retained.
+Pensieve 2.8
+- More consistent visual language across Home, Reflections, Insights and More.
+- Shared heading hierarchy, spacing, silver-blue panels and card treatment.
+- Added an optional long-form personal reflection at the end.
+- Long reflection can be skipped and is never required.
+- Saved long reflections persist locally for future memory / "You've been here before" use.
+- 2.7 contextual wisdom system and low-friction entry retained.

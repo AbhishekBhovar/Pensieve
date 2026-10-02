@@ -8,7 +8,7 @@
 <link rel="apple-touch-icon" href="assets/pensieve-icon-2.5.png">
 <link rel="icon" type="image/png" href="assets/pensieve-icon-2.5.png">
 <title>Pensieve</title>
-<meta name="pensieve-build" content="2.7">
+<meta name="pensieve-build" content="2.8">
 <style>
 :root{
   --bg:#061019;--bg2:#0b1822;--panel:#102430;--panel2:#142d3a;
@@ -135,6 +135,18 @@ textarea::placeholder{color:#718896}
 .wisdom-source{font-size:13px;color:var(--muted)}
 .wisdom-context{margin-top:16px;font-size:15px;line-height:1.55;color:var(--text)}
 .wisdom-note{font-size:13px;line-height:1.5;color:var(--muted)}
+
+/* Pensieve 2.8 — unified main-tab styling */
+.tab-intro{padding:4px 2px 2px}
+.tab-kicker{font-size:11px;letter-spacing:.17em;text-transform:uppercase;color:#9fc6df;margin-bottom:9px}
+.tab-title{margin:0 0 7px;font-family:Georgia,serif;font-size:30px;line-height:1.08}
+.tab-sub{margin:0;color:var(--muted);font-size:14px;line-height:1.5}
+.tab-panel{padding:18px;border-radius:22px;background:linear-gradient(145deg,rgba(132,177,213,.10),rgba(255,255,255,.035));box-shadow:inset 0 0 0 1px rgba(204,231,250,.10),0 16px 38px rgba(0,0,0,.15)}
+.tab-panel h2{margin:0 0 7px;font-family:Georgia,serif;font-size:20px}
+.tab-panel p{margin:0;color:var(--muted);line-height:1.5}
+#reflections .empty-state,#insights .empty-state{padding:20px;border-radius:22px;background:linear-gradient(145deg,rgba(132,177,213,.08),rgba(255,255,255,.025));box-shadow:inset 0 0 0 1px rgba(204,231,250,.09)}
+.optional-reflection textarea{min-height:230px;resize:vertical}
+.optional-badge{display:inline-flex;width:max-content;padding:6px 10px;border-radius:999px;background:rgba(158,199,225,.10);color:#acd0e6;font-size:11px;letter-spacing:.08em;text-transform:uppercase}
 </style>
 </head>
 <body>
@@ -220,7 +232,7 @@ textarea::placeholder{color:#718896}
 <div class="stack"><div class="eyebrow">Something to carry with you</div><h1>You moved before you felt ready.</h1><p class="sub">That matters more than waiting for motivation to arrive first.</p></div>
 <div class="wisdom-card"><div class="wisdom-label">Story wisdom</div><p class="wisdom-quote">“It ain’t about how hard you hit. It’s about how hard you can get hit and keep moving forward.”</p><div class="wisdom-source">— Rocky Balboa</div><div class="wisdom-context">You didn’t need to fix the whole day. You just needed to move. And you did.</div></div>
 <button class="secondary" id="keep-moving-wisdom" type="button">Keep this wisdom</button>
-<a class="primary" data-route="home" href="#home">Continue my day</a>
+<div class="tab-panel" style="margin-top:8px"><h2>Want to leave anything else here?</h2><p>Optional — write a longer personal reflection if there’s more you want to get out.</p><a class="secondary" style="margin-top:14px" data-route="long-reflection" href="#long-reflection">Add a personal reflection</a></div><a class="primary" data-route="home" href="#home">Continue my day</a>
 </div></div></section>
 <section id="stay" class="screen conversation"><div class="scroll">
  <div class="topbar"><a class="back" data-route="struggling" href="#struggling">‹</a><div class="brand">PENSIEVE</div><span></span></div>
@@ -343,7 +355,7 @@ textarea::placeholder{color:#718896}
  <div class="stack-lg"><div class="stack"><div class="eyebrow">For today</div><h2>You don’t have to solve the whole future tonight.</h2><p class="sub">Before you leave this here, you can still change either thought.</p></div>
  <div class="finalbox"><strong>What I’m taking with me</strong><textarea>One failed attempt doesn’t answer what I’m capable of. I need to understand what didn’t work rather than turn the result into a judgement about myself.</textarea></div>
  <div class="finalbox"><strong>My 1% step today</strong><textarea>Ask someone for help with the part I’m stuck on.</textarea></div>
- <a class="primary" data-route="kept" href="#kept">Leave this in the Pensieve</a></div>
+ <a class="primary" data-route="kept" href="#kept">Leave this in the Pensieve</a><div class="tab-panel" style="margin-top:8px"><h2>Want to leave anything else here?</h2><p>Optional — write a longer personal reflection if there’s more you want to get out.</p><a class="secondary" style="margin-top:14px" data-route="long-reflection" href="#long-reflection">Add a personal reflection</a></div></div>
 </div></section>
 
 <section id="kept" class="screen conversation"><div class="scroll">
@@ -505,6 +517,46 @@ textarea::placeholder{color:#718896}
    }
  });
  document.addEventListener('DOMContentLoaded',render); render();
+})();
+</script>
+
+<section id="long-reflection" class="screen conversation"><div class="scroll">
+ <div class="topbar"><a class="back" data-route="home" href="#home">‹</a><div class="brand">PENSIEVE</div><span></span></div>
+ <div class="stack-lg optional-reflection">
+  <div class="optional-badge">Optional</div>
+  <div class="stack"><h1>Want to leave anything else here?</h1><p class="sub">This can be as short or as long as you want. There’s nothing else you need to figure out.</p></div>
+  <textarea id="long-reflection-text" placeholder="Write whatever you want to leave in the Pensieve…"></textarea>
+  <button class="primary" id="save-long-reflection" type="button">Add to this memory</button>
+  <a class="secondary" data-route="home" href="#home">No, I’m finished</a>
+ </div>
+</div></section>
+
+<section id="long-reflection-saved" class="screen conversation"><div class="scroll">
+ <div class="topbar"><a class="back" data-route="home" href="#home">‹</a><div class="brand">PENSIEVE</div><span></span></div>
+ <div class="stack-lg low-energy">
+  <div class="stack"><div class="eyebrow">Left in the Pensieve</div><h1>That’s here when you need it.</h1><p class="sub">Your longer reflection stays with this memory and can help Pensieve recognise when you’ve been somewhere similar before.</p></div>
+  <a class="primary" data-route="home" href="#home">Finish</a>
+ </div>
+</div></section>
+<a data-route="long-reflection-saved" href="#long-reflection-saved" style="display:none"></a>
+<script>
+(function(){
+ const KEY='pensieve_long_reflections_v1';
+ function saveLong(text){
+   text=(text||'').trim(); if(!text)return false;
+   let items=[]; try{items=JSON.parse(localStorage.getItem(KEY)||'[]')}catch(e){}
+   items.unshift({text:text,created:new Date().toISOString()});
+   localStorage.setItem(KEY,JSON.stringify(items)); return true;
+ }
+ document.addEventListener('click',function(e){
+   if(e.target && e.target.id==='save-long-reflection'){
+     const box=document.getElementById('long-reflection-text');
+     if(!box || !saveLong(box.value)){if(box)box.focus();return;}
+     box.value='';
+     const target=document.querySelector('[data-route="long-reflection-saved"]');
+     if(target){target.click();} else {location.hash='long-reflection-saved';}
+   }
+ });
 })();
 </script>
 </body>
